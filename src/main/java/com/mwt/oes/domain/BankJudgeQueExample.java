@@ -374,6 +374,77 @@ public class BankJudgeQueExample {
             return (Criteria) this;
         }
 
+        //
+        public Criteria andPictureSrcIsNull() {
+            addCriterion("picture_src is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcIsNotNull() {
+            addCriterion("picture_src is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcEqualTo(String value) {
+            addCriterion("picture_src =", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcNotEqualTo(String value) {
+            addCriterion("picture_src <>", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcGreaterThan(String value) {
+            addCriterion("picture_src >", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcGreaterThanOrEqualTo(String value) {
+            addCriterion("picture_src >=", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcLessThan(String value) {
+            addCriterion("picture_src <", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcLessThanOrEqualTo(String value) {
+            addCriterion("picture_src <=", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcLike(String value) {
+            addCriterion("picture_src like", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcNotLike(String value) {
+            addCriterion("picture_src not like", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcIn(List<String> values) {
+            addCriterion("picture_src in", values, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcNotIn(List<String> values) {
+            addCriterion("picture_src not in", values, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcBetween(String value1, String value2) {
+            addCriterion("picture_src between", value1, value2, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcNotBetween(String value1, String value2) {
+            addCriterion("picture_src not between", value1, value2, "pictureSrc");
+            return (Criteria) this;
+        }
+
         public Criteria andAnswerExplainIsNull() {
             addCriterion("answer_explain is null");
             return (Criteria) this;

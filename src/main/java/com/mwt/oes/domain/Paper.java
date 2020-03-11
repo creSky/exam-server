@@ -19,15 +19,95 @@ public class Paper {
 
     private Integer singleScore;
 
+    private Integer singleNum;
+
     private Integer multipleScore;
+
+    private Integer multipleNum;
 
     private Integer judgeScore;
 
+    private Integer judgeNum;
+
     private Integer fillScore;
+
+    private Integer fillNum;
+
+    private Integer answerScore;
+
+    private Integer answerNum;
 
     private Integer langId;
 
     private Integer participateNum;
+
+    private Integer visible;
+
+    private Integer pid;
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
+    }
+
+    public Integer getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Integer visible) {
+        this.visible = visible;
+    }
+
+    public Integer getSingleNum() {
+        return singleNum;
+    }
+
+    public void setSingleNum(Integer singleNum) {
+        this.singleNum = singleNum;
+    }
+
+    public Integer getMultipleNum() {
+        return multipleNum;
+    }
+
+    public void setMultipleNum(Integer multipleNum) {
+        this.multipleNum = multipleNum;
+    }
+
+    public Integer getJudgeNum() {
+        return judgeNum;
+    }
+
+    public void setJudgeNum(Integer judgeNum) {
+        this.judgeNum = judgeNum;
+    }
+
+    public Integer getFillNum() {
+        return fillNum;
+    }
+
+    public void setFillNum(Integer fillNum) {
+        this.fillNum = fillNum;
+    }
+
+    public Integer getAnswerNum() {
+        return answerNum;
+    }
+
+    public void setAnswerNum(Integer answerNum) {
+        this.answerNum = answerNum;
+    }
+
+    public Integer getAnswerScore() {
+        return answerScore;
+    }
+
+    public void setAnswerScore(Integer answerScore) {
+        this.answerScore = answerScore;
+    }
 
     public Integer getPaperId() {
         return paperId;
@@ -132,4 +212,5 @@ public class Paper {
     public void setParticipateNum(Integer participateNum) {
         this.participateNum = participateNum;
     }
+
 }

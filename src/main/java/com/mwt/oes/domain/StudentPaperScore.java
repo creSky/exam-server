@@ -17,6 +17,16 @@ public class StudentPaperScore {
 
     private Integer paperId;
 
+    private String tno;
+
+    public String getTno() {
+        return tno;
+    }
+
+    public void setTno(String tno) {
+        this.tno = tno;
+    }
+
     public Integer getScoreId() {
         return scoreId;
     }

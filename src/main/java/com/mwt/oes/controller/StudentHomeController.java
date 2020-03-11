@@ -1,7 +1,9 @@
 package com.mwt.oes.controller;
 
+import com.mwt.oes.dao.StudentMapper;
 import com.mwt.oes.domain.*;
 import com.mwt.oes.service.StudentHomeService;
+import com.mwt.oes.service.TeacherPaperService;
 import com.mwt.oes.util.ServerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,12 @@ public class StudentHomeController {
 
     @Autowired
     private StudentHomeService studentHomeService;
+
+    @Autowired
+    private TeacherPaperService teacherPaperService;
+
+    @Autowired
+    private StudentMapper studentMapper;
 
     //Log4j日志处理
     public static Logger log = LoggerFactory.getLogger(StudentSystemController.class);
@@ -90,29 +98,39 @@ public class StudentHomeController {
         请求获取当前试卷状态，即是否已完成
      */
     @RequestMapping(value = "/getCurrentPaperStatus", method = RequestMethod.POST)
-    public ServerResponse getCurrentPaperStatus(@RequestBody(required = false)StudentPaperScore studentPaperScore){
-        String sno = studentPaperScore.getSno();
+    public ServerResponse getCurrentPaperStatus(@RequestParam("sno")String sno,@RequestParam("paperId")String paperId){
+        /*String sno = studentPaperScore.getSno();
         Integer paperId = studentPaperScore.getPaperId();
         List<StudentPaperScore> resultList = studentHomeService.getCurrentPaperStatus(sno, paperId);
         if(resultList != null && resultList.size() > 0){
             return ServerResponse.createBySuccess("当前试卷已完成",1);
         }
-        else {
+        else {*/
             return ServerResponse.createByError("当前试卷未完成");
-        }
+        /*}*/
     }
 
-    /*
-       通过paperId获取试卷及单选题、多选题、判断题和填空题信息
-    */
     @RequestMapping("/getPapersInfoByPaperId")
-    public ServerResponse getPapersInfoByPaperId(@RequestParam("paperId")Integer paperId ){
-        Paper paper = studentHomeService.getPapersInfoByPaperId(paperId);
+    public ServerResponse getPapersInfoByPaperId(@RequestParam("sno")String sno){
+        Student student= studentMapper.selectByPrimaryKey(sno);
+        //答题人员维护答卷类型
+        Integer langId = student.getLangId();
+        List<Paper> paperList= studentHomeService.getPapersInfoByLangId(langId);
+        if (paperList==null || paperList.size()==0){
+            return ServerResponse.createByError("此用户没有应聘类型的数据");
+        }
+        Paper paper = paperList.get(0);
+
+        Paper randomPaper=
+                teacherPaperService.randomInsertPaperInfoByPaper(paper);
+        Integer paperId=randomPaper.getPaperId();
         Map<String, Integer> numObj = studentHomeService.getPaperQueNumByPaperId(paperId);
         List<Map<String, Object>> singleQueList = studentHomeService.getSingleQueListByPaperId(paperId);
         List<Map<String, Object>> multipleQueList = studentHomeService.getMultipleQueListByPaperId(paperId);
         List<Map<String, Object>> judgeQueList = studentHomeService.getJudgeQueListByPaperId(paperId);
         List<Map<String, Object>> fillQueList = studentHomeService.getFillQueListByPaperId(paperId);
+        List<Map<String, Object>> answerQueList =
+                studentHomeService.getAnswerQueListByPaperId(paperId);
         if(paper != null && numObj != null){
 /*            List listResult = new ArrayList();
             listResult.add(paper);
@@ -124,12 +142,60 @@ public class StudentHomeController {
             map.put("multipleQueList",multipleQueList);
             map.put("judgeQueList",judgeQueList);
             map.put("fillQueList",fillQueList);
+            map.put("answerQueList",answerQueList);
             return ServerResponse.createBySuccess("试卷id为" + paperId + "的试卷信息获取成功",map);
         }
         else {
             return ServerResponse.createByError("试卷id为" + paperId + "的试卷信息获取失败");
         }
     }
+
+
+    /*
+       通过paperId获取试卷及单选题、多选题、判断题和填空题信息
+    */
+    @RequestMapping("/createPapersInfoByPaperId")
+    public ServerResponse createPapersInfoByPaperId(@RequestParam("sno")String sno ){
+        Student student= studentMapper.selectByPrimaryKey(sno);
+        //答题人员维护答卷类型
+        Integer langId = student.getLangId();
+        List<Paper> paperList= studentHomeService.getPapersInfoByLangId(langId);
+        if (paperList==null || paperList.size()==0){
+            return ServerResponse.createByError("此用户没有应聘类型的数据");
+        }
+        Paper paper = paperList.get(0);
+
+        Paper randomPaper=
+                teacherPaperService.randomInsertPaperInfoByPaper(paper);
+        Integer paperId=randomPaper.getPaperId();
+        Map<String, Integer> numObj = studentHomeService.getPaperQueNumByPaperId(paperId);
+        List<Map<String, Object>> singleQueList = studentHomeService.getSingleQueListByPaperId(paperId);
+        List<Map<String, Object>> multipleQueList = studentHomeService.getMultipleQueListByPaperId(paperId);
+        List<Map<String, Object>> judgeQueList = studentHomeService.getJudgeQueListByPaperId(paperId);
+        List<Map<String, Object>> fillQueList = studentHomeService.getFillQueListByPaperId(paperId);
+        List<Map<String, Object>> answerQueList =
+                studentHomeService.getAnswerQueListByPaperId(paperId);
+        if(paper != null && numObj != null){
+/*            List listResult = new ArrayList();
+            listResult.add(paper);
+            listResult.add(numObj);*/
+            Map<String, Object> map = new HashMap<>();
+            map.put("paperInfo",paper);
+            map.put("queNumInfo",numObj);
+            map.put("singleQueList",singleQueList);
+            map.put("multipleQueList",multipleQueList);
+            map.put("judgeQueList",judgeQueList);
+            map.put("fillQueList",fillQueList);
+            map.put("answerQueList",answerQueList);
+            map.put("paperId",paperId.toString());
+            return ServerResponse.createBySuccess("试卷id为" + paperId + "的试卷信息获取成功",map);
+        }
+        else {
+            return ServerResponse.createByError("试卷id为" + paperId + "的试卷信息获取失败");
+        }
+    }
+
+
     /*
         插入学生成绩表成绩信息，包含三个字段，考试开始时间、学号和试卷id
      */
@@ -151,6 +217,11 @@ public class StudentHomeController {
 
         //学号
         String sno = (String) obj.get("sno");
+        //锁定账号
+        Student student= studentMapper.selectByPrimaryKey(sno);
+        student.setStuStatus("0");
+        studentMapper.updateByPrimaryKey(student);
+
         //试卷id
         Integer paperId = Integer.parseInt((String) obj.get("paperId"));
         //单选题答案数组
@@ -161,12 +232,15 @@ public class StudentHomeController {
         List<String> judgeAnswers = (List) obj.get("judgeAnswers");
         //填空题答案数组
         List<String> fillAnswers = (List) obj.get("fillAnswers");
+
+        List<String> answerAnswers = (List) obj.get("answerAnswers");
         //考试花费时间
         int timeUsed = (Integer) obj.get("timeUsed");
 
-        int result = studentHomeService.insertPaperAnswerAndPaperScore(sno, paperId, singleAnswers,
+        int result = studentHomeService.insertPaperAnswerAndPaperScore(sno,
+                paperId, singleAnswers,
                 multipleAnswers, judgeAnswers,
-                fillAnswers, timeUsed);
+                fillAnswers,answerAnswers, timeUsed);
 
         if(result == 0){
             return ServerResponse.createByError("数据库错误，插入学生试卷答案记录表或学生成绩表失败");

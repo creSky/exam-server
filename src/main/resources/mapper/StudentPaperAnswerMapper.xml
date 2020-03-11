@@ -9,6 +9,8 @@
     <result column="paper_id" property="paperId" jdbcType="INTEGER" />
     <result column="sno" property="sno" jdbcType="CHAR" />
     <result column="isCollect" property="iscollect" jdbcType="VARCHAR" />
+    <result column="tno" property="tno" jdbcType="CHAR" />
+    <result column="score" property="score" jdbcType="CHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -69,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    answer_id, stu_answer, isCorrect, que_id, paper_id, sno, isCollect
+    answer_id, stu_answer, isCorrect, que_id, paper_id, sno, isCollect,tno,score
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mwt.oes.domain.StudentPaperAnswerExample" >
     select
@@ -124,6 +126,16 @@
     AND s.paper_id = #{paperId,jdbcType=INTEGER} AND s.isCorrect = 1
   </select>
 
+  <select id="selectAnswerCorrectCount" resultType="java.lang.Integer"
+          parameterType="com.mwt.oes.domain.StudentPaperAnswer">
+    SELECT
+    COUNT(*)
+    FROM paper_que p,student_paper_answer s
+    WHERE p.que_type = 5 AND p.que_id = s.que_id AND s.sno =
+    #{sno,jdbcType=CHAR}
+    AND s.paper_id = #{paperId,jdbcType=INTEGER} AND s.isCorrect = 1
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from student_paper_answer
     where answer_id = #{answerId,jdbcType=INTEGER}
@@ -136,10 +148,12 @@
   </delete>
   <insert id="insert" parameterType="com.mwt.oes.domain.StudentPaperAnswer" >
     insert into student_paper_answer (answer_id, stu_answer, isCorrect, 
-      que_id, paper_id, sno, isCollect
+      que_id, paper_id, sno, isCollect,tno,score
       )
     values (#{answerId,jdbcType=INTEGER}, #{stuAnswer,jdbcType=VARCHAR}, #{iscorrect,jdbcType=VARCHAR}, 
-      #{queId,jdbcType=INTEGER}, #{paperId,jdbcType=INTEGER}, #{sno,jdbcType=CHAR}, #{iscollect,jdbcType=VARCHAR}
+      #{queId,jdbcType=INTEGER}, #{paperId,jdbcType=INTEGER},
+      #{sno,jdbcType=CHAR}, #{iscollect,jdbcType=VARCHAR},
+      #{tno,jdbcType=CHAR}, #{score,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.mwt.oes.domain.StudentPaperAnswer" >
@@ -166,6 +180,12 @@
       <if test="iscollect != null" >
         isCollect,
       </if>
+      <if test="tno != null" >
+        tno,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="answerId != null" >
@@ -188,6 +208,12 @@
       </if>
       <if test="iscollect != null" >
         #{iscollect,jdbcType=VARCHAR},
+      </if>
+      <if test="tno != null" >
+        #{tno,jdbcType=CHAR},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -221,6 +247,12 @@
       <if test="record.iscollect != null" >
         isCollect = #{record.iscollect,jdbcType=VARCHAR},
       </if>
+      <if test="record.tno != null" >
+        tno = #{record.tno,jdbcType=CHAR},
+      </if>
+      <if test="record.score != null" >
+        score = #{record.score,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -234,7 +266,9 @@
       que_id = #{record.queId,jdbcType=INTEGER},
       paper_id = #{record.paperId,jdbcType=INTEGER},
       sno = #{record.sno,jdbcType=CHAR},
-      isCollect = #{record.iscollect,jdbcType=VARCHAR}
+      isCollect = #{record.iscollect,jdbcType=VARCHAR},
+    tno = #{record.tno,jdbcType=CHAR},
+    score = #{record.score,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -260,6 +294,12 @@
       <if test="iscollect != null" >
         isCollect = #{iscollect,jdbcType=VARCHAR},
       </if>
+      <if test="tno != null" >
+        tno = #{tno,jdbcType=CHAR},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
     </set>
     where answer_id = #{answerId,jdbcType=INTEGER}
   </update>
@@ -270,7 +310,9 @@
       que_id = #{queId,jdbcType=INTEGER},
       paper_id = #{paperId,jdbcType=INTEGER},
       sno = #{sno,jdbcType=CHAR},
-      isCollect = #{iscollect,jdbcType=VARCHAR}
+      isCollect = #{iscollect,jdbcType=VARCHAR},
+      tno = #{tno,jdbcType=CHAR},
+      score = #{score,jdbcType=INTEGER}
     where answer_id = #{answerId,jdbcType=INTEGER}
   </update>
 </mapper>

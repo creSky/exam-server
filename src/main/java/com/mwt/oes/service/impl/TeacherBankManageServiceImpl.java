@@ -25,7 +25,8 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     BankJudgeQueMapper bankJudgeQueMapper;
     @Autowired
     BankFillQueMapper bankFillQueMapper;
-
+    @Autowired
+    BankAnswerQueMapper bankAnswerQueMapper;
     @Override
     public List<Map<String, Object>> getSingleList() {
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -36,9 +37,11 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             Map<String, Object> map = new HashMap<>();
             map.put("id", bankSingleChoiceQueList.indexOf(bankSingleChoiceQue) + 1);
             map.put("singleId", bankSingleChoiceQue.getSingleId());
-            Map<String, String> singleContentMap = FindContentWithImage.findContentWithImage(bankSingleChoiceQue.getSingleContent());
-            map.put("content", singleContentMap.get("content"));
-            map.put("pictureSrc", singleContentMap.get("pictureSrc"));
+            //Map<String, String> singleContentMap =
+             //       FindContentWithImage.findContentWithImage
+            // (bankSingleChoiceQue.getSingleContent());
+            map.put("content", bankSingleChoiceQue.getSingleContent());
+            map.put("pictureSrc", bankSingleChoiceQue.getPictureSrc());
             map.put("choiceA", bankSingleChoiceQue.getChoiceA());
             map.put("choiceB", bankSingleChoiceQue.getChoiceB());
             map.put("choiceC", bankSingleChoiceQue.getChoiceC());
@@ -79,9 +82,11 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             Map<String, Object> map = new HashMap<>();
             map.put("id", bankSingleChoiceQueList.indexOf(bankSingleChoiceQue) + 1);
             map.put("singleId", bankSingleChoiceQue.getSingleId());
-            Map<String, String> singleContentMap = FindContentWithImage.findContentWithImage(bankSingleChoiceQue.getSingleContent());
-            map.put("content", singleContentMap.get("content"));
-            map.put("pictureSrc", singleContentMap.get("pictureSrc"));
+            //Map<String, String> singleContentMap =
+             //       FindContentWithImage.findContentWithImage
+            // (bankSingleChoiceQue.getSingleContent());
+            map.put("content", bankSingleChoiceQue.getSingleContent());
+            map.put("pictureSrc", bankSingleChoiceQue.getPictureSrc());
             map.put("choiceA", bankSingleChoiceQue.getChoiceA());
             map.put("choiceB", bankSingleChoiceQue.getChoiceB());
             map.put("choiceC", bankSingleChoiceQue.getChoiceC());
@@ -112,7 +117,8 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     public int insertSingleInfo(Map<String, Object> obj) {
         String content = (String) obj.get("content");
         String pictureSrc = (String) obj.get("pictureSrc");
-        String singleContent = content + "[[[" + pictureSrc.substring(40) + "]]]";
+        //String singleContent = content + "[[[" + pictureSrc.substring(40) +
+         //       "]]]";
 
         String choiceA = (String) obj.get("choiceA");
         String choiceB = (String) obj.get("choiceB");
@@ -126,7 +132,8 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         Integer langId = (Integer) obj.get("langId");
 
         BankSingleChoiceQue bankSingleChoiceQue = new BankSingleChoiceQue();
-        bankSingleChoiceQue.setSingleContent(singleContent);
+        bankSingleChoiceQue.setSingleContent(content);
+        bankSingleChoiceQue.setPictureSrc(pictureSrc);
         bankSingleChoiceQue.setChoiceA(choiceA);
         bankSingleChoiceQue.setChoiceB(choiceB);
         bankSingleChoiceQue.setChoiceC(choiceC);
@@ -147,10 +154,10 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         Integer singleId = (Integer) obj.get("singleId");
         String content = (String) obj.get("content");
         String pictureSrc = (String) obj.get("pictureSrc");
-        String singleContent = content;
-        if (!pictureSrc.equals("")) {
+        //String singleContent = content;
+        /*if (!pictureSrc.equals("")) {
             singleContent = content + "[[[" + pictureSrc.substring(40) + "]]]";
-        }
+        }*/
         String choiceA = (String) obj.get("choiceA");
         String choiceB = (String) obj.get("choiceB");
         String choiceC = (String) obj.get("choiceC");
@@ -164,7 +171,8 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
 
         BankSingleChoiceQue bankSingleChoiceQue = new BankSingleChoiceQue();
         bankSingleChoiceQue.setSingleId(singleId);
-        bankSingleChoiceQue.setSingleContent(singleContent);
+        bankSingleChoiceQue.setSingleContent(content);
+        bankSingleChoiceQue.setPictureSrc(pictureSrc);
         bankSingleChoiceQue.setChoiceA(choiceA);
         bankSingleChoiceQue.setChoiceB(choiceB);
         bankSingleChoiceQue.setChoiceC(choiceC);
@@ -193,6 +201,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             bankSingleChoiceQue.setChoiceE((String) single.get("choiceE"));
             bankSingleChoiceQue.setChoiceF((String) single.get("choiceF"));
             bankSingleChoiceQue.setChoiceG((String) single.get("choiceG"));
+            bankSingleChoiceQue.setPictureSrc((String) single.get("pictureSrc"));
             bankSingleChoiceQue.setSingleAnswer((String) single.get("singleAnswer"));
             bankSingleChoiceQue.setAnswerExplain((String) single.get("answerExplain"));
             bankSingleChoiceQue.setLangId((Integer) single.get("langId"));
@@ -212,9 +221,9 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             Map<String, Object> map = new HashMap<>();
             map.put("id", bankMultipleChoiceQueList.indexOf(bankMultipleChoiceQue) + 1);
             map.put("multipleId", bankMultipleChoiceQue.getMultipleId());
-            Map<String, String> multipleContentMap = FindContentWithImage.findContentWithImage(bankMultipleChoiceQue.getMultipleContent());
-            map.put("content", multipleContentMap.get("content"));
-            map.put("pictureSrc", multipleContentMap.get("pictureSrc"));
+            /*Map<String, String> multipleContentMap = FindContentWithImage.findContentWithImage(bankMultipleChoiceQue.getMultipleContent());*/
+            map.put("content", bankMultipleChoiceQue.getMultipleContent());
+            map.put("pictureSrc", bankMultipleChoiceQue.getPictureSrc());
             map.put("choiceA", bankMultipleChoiceQue.getChoiceA());
             map.put("choiceB", bankMultipleChoiceQue.getChoiceB());
             map.put("choiceC", bankMultipleChoiceQue.getChoiceC());
@@ -256,9 +265,11 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             Map<String, Object> map = new HashMap<>();
             map.put("id", bankMultipleChoiceQueList.indexOf(bankMultipleChoiceQue) + 1);
             map.put("multipleId", bankMultipleChoiceQue.getMultipleId());
-            Map<String, String> multipleContentMap = FindContentWithImage.findContentWithImage(bankMultipleChoiceQue.getMultipleContent());
-            map.put("content", multipleContentMap.get("content"));
-            map.put("pictureSrc", multipleContentMap.get("pictureSrc"));
+            //Map<String, String> multipleContentMap =
+            //        FindContentWithImage.findContentWithImage
+            // (bankMultipleChoiceQue.getMultipleContent());
+            map.put("content", bankMultipleChoiceQue.getMultipleContent());
+            map.put("pictureSrc", bankMultipleChoiceQue.getPictureSrc());
             map.put("choiceA", bankMultipleChoiceQue.getChoiceA());
             map.put("choiceB", bankMultipleChoiceQue.getChoiceB());
             map.put("choiceC", bankMultipleChoiceQue.getChoiceC());
@@ -290,10 +301,10 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     public int insertMultipleInfo(Map<String, Object> obj) {
         String content = (String) obj.get("content");
         String pictureSrc = (String) obj.get("pictureSrc");
-        String multipleContent = content;
-        if (!pictureSrc.equals("")) {
+        /*String multipleContent = content;*/
+        /*if (!pictureSrc.equals("")) {
             multipleContent = content + "[[[" + pictureSrc.substring(40) + "]]]";
-        }
+        }*/
 
         String choiceA = (String) obj.get("choiceA");
         String choiceB = (String) obj.get("choiceB");
@@ -307,7 +318,8 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         Integer langId = (Integer) obj.get("langId");
 
         BankMultipleChoiceQue bankMultipleChoiceQue = new BankMultipleChoiceQue();
-        bankMultipleChoiceQue.setMultipleContent(multipleContent);
+        bankMultipleChoiceQue.setMultipleContent(content);
+        bankMultipleChoiceQue.setPictureSrc(pictureSrc);
         bankMultipleChoiceQue.setChoiceA(choiceA);
         bankMultipleChoiceQue.setChoiceB(choiceB);
         bankMultipleChoiceQue.setChoiceC(choiceC);
@@ -328,10 +340,10 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         Integer multipleId = (Integer) obj.get("multipleId");
         String content = (String) obj.get("content");
         String pictureSrc = (String) obj.get("pictureSrc");
-        String multipleContent = content;
-        if (!pictureSrc.equals("")) {
+        //String multipleContent = content;
+        /*if (!pictureSrc.equals("")) {
             multipleContent = content + "[[[" + pictureSrc.substring(40) + "]]]";
-        }
+        }*/
         String choiceA = (String) obj.get("choiceA");
         String choiceB = (String) obj.get("choiceB");
         String choiceC = (String) obj.get("choiceC");
@@ -345,7 +357,8 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
 
         BankMultipleChoiceQue bankMultipleChoiceQue = new BankMultipleChoiceQue();
         bankMultipleChoiceQue.setMultipleId(multipleId);
-        bankMultipleChoiceQue.setMultipleContent(multipleContent);
+        bankMultipleChoiceQue.setMultipleContent(content);
+        bankMultipleChoiceQue.setPictureSrc(pictureSrc);
         bankMultipleChoiceQue.setChoiceA(choiceA);
         bankMultipleChoiceQue.setChoiceB(choiceB);
         bankMultipleChoiceQue.setChoiceC(choiceC);
@@ -374,6 +387,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             bankMultipleChoiceQue.setChoiceE((String) multiple.get("choiceE"));
             bankMultipleChoiceQue.setChoiceF((String) multiple.get("choiceF"));
             bankMultipleChoiceQue.setChoiceG((String) multiple.get("choiceG"));
+            bankMultipleChoiceQue.setPictureSrc((String) multiple.get("pictureSrc"));
             bankMultipleChoiceQue.setMultipleAnswer((String) multiple.get("multipleAnswer"));
             bankMultipleChoiceQue.setAnswerExplain((String) multiple.get("answerExplain"));
             bankMultipleChoiceQue.setLangId((Integer) multiple.get("langId"));
@@ -395,6 +409,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("id", bankJudgeQueList.indexOf(bankJudgeQue) + 1);
             map.put("judgeId", bankJudgeQue.getJudgeId());
             map.put("content", bankJudgeQue.getJudgeContent());
+            map.put("pictureSrc", bankJudgeQue.getPictureSrc());
             map.put("judgeAnswer", bankJudgeQue.getJudgeAnswer());
             map.put("composeFlag", bankJudgeQue.getComposeFlag());
             map.put("answerExplain", bankJudgeQue.getAnswerExplain());
@@ -431,6 +446,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("content", bankJudgeQue.getJudgeContent());
             map.put("composeFlag", bankJudgeQue.getComposeFlag());
             map.put("judgeAnswer", bankJudgeQue.getJudgeAnswer());
+            map.put("pictureSrc", bankJudgeQue.getPictureSrc());
             map.put("answerExplain", bankJudgeQue.getAnswerExplain());
             int allLangId = bankJudgeQue.getLangId();
             map.put("langId", allLangId);
@@ -451,12 +467,14 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     @Override
     public int insertJudgeInfo(Map<String, Object> obj) {
         String content = (String) obj.get("content");
+        String pictureSrc = (String) obj.get("pictureSrc");
         String judgeAnswer = (String) obj.get("judgeAnswer");
         String answerExplain = (String) obj.get("answerExplain");
         Integer langId = (Integer) obj.get("langId");
 
         BankJudgeQue bankJudgeQue = new BankJudgeQue();
         bankJudgeQue.setJudgeContent(content);
+        bankJudgeQue.setPictureSrc(pictureSrc);
         bankJudgeQue.setJudgeAnswer(judgeAnswer);
         bankJudgeQue.setAnswerExplain(answerExplain);
         bankJudgeQue.setLangId(langId);
@@ -472,6 +490,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         String judgeAnswer = (String) obj.get("judgeAnswer");
         String answerExplain = (String) obj.get("answerExplain");
         Integer langId = (Integer) obj.get("langId");
+        String pictureSrc = (String) obj.get("pictureSrc");
 
         BankJudgeQue bankJudgeQue = new BankJudgeQue();
         bankJudgeQue.setJudgeId(judgeId);
@@ -479,6 +498,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         bankJudgeQue.setJudgeAnswer(judgeAnswer);
         bankJudgeQue.setAnswerExplain(answerExplain);
         bankJudgeQue.setLangId(langId);
+        bankJudgeQue.setPictureSrc(pictureSrc);
 
         int result = bankJudgeQueMapper.updateByPrimaryKeySelective(bankJudgeQue);
         return result;
@@ -493,6 +513,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             bankJudgeQue.setJudgeAnswer((String) judge.get("judgeAnswer"));
             bankJudgeQue.setAnswerExplain((String) judge.get("answerExplain"));
             bankJudgeQue.setLangId((Integer) judge.get("langId"));
+            bankJudgeQue.setPictureSrc((String) judge.get("pictureSrc"));
             result = bankJudgeQueMapper.insertSelective(bankJudgeQue);
         }
         return result;
@@ -512,6 +533,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("fillId", bankFillQue.getFillId());
             map.put("content", bankFillQue.getFillContent());
             map.put("composeFlag", bankFillQue.getComposeFlag());
+            map.put("pictureSrc", bankFillQue.getPictureSrc());
             map.put("fillAnswer", bankFillQue.getFillAnswer());
             map.put("answerExplain", bankFillQue.getAnswerExplain());
             int langId = bankFillQue.getLangId();
@@ -547,6 +569,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("content", bankFillQue.getFillContent());
             map.put("fillAnswer", bankFillQue.getFillAnswer());
             map.put("composeFlag", bankFillQue.getComposeFlag());
+            map.put("pictureSrc", bankFillQue.getPictureSrc());
             map.put("answerExplain", bankFillQue.getAnswerExplain());
             int allLangId = bankFillQue.getLangId();
             map.put("langId", allLangId);
@@ -571,11 +594,13 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         String fillAnswer = (String) obj.get("fillAnswer");
         String answerExplain = (String) obj.get("answerExplain");
         Integer langId = (Integer) obj.get("langId");
+        String pictureSrc = (String) obj.get("pictureSrc");
 
         BankFillQue bankFillQue = new BankFillQue();
         bankFillQue.setFillContent(content);
         bankFillQue.setFillAnswer(fillAnswer);
         bankFillQue.setAnswerExplain(answerExplain);
+        bankFillQue.setPictureSrc(pictureSrc);
         bankFillQue.setLangId(langId);
 
         int result = bankFillQueMapper.insertSelective(bankFillQue);
@@ -589,6 +614,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         String fillAnswer = (String) obj.get("fillAnswer");
         String answerExplain = (String) obj.get("answerExplain");
         Integer langId = (Integer) obj.get("langId");
+        String pictureSrc = (String) obj.get("pictureSrc");
 
         BankFillQue bankFillQue = new BankFillQue();
         bankFillQue.setFillId(fillId);
@@ -596,6 +622,7 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
         bankFillQue.setFillAnswer(fillAnswer);
         bankFillQue.setAnswerExplain(answerExplain);
         bankFillQue.setLangId(langId);
+        bankFillQue.setPictureSrc(pictureSrc);
 
         int result = bankFillQueMapper.updateByPrimaryKeySelective(bankFillQue);
         return result;
@@ -610,7 +637,132 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             bankFillQue.setFillAnswer((String) fill.get("fillAnswer"));
             bankFillQue.setAnswerExplain((String) fill.get("answerExplain"));
             bankFillQue.setLangId((Integer) fill.get("langId"));
+            bankFillQue.setPictureSrc((String) fill.get("pictureSrc"));
             result = bankFillQueMapper.insertSelective(bankFillQue);
+        }
+        return result;
+    }
+
+    //简答题
+
+    @Override
+    public List<Map<String, Object>> getAnswerList() {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        BankAnswerQueExample bankAnswerQueExample = new BankAnswerQueExample();
+        bankAnswerQueExample.setOrderByClause("fill_id asc");
+        List<BankAnswerQue> bankAnswerQueList = bankAnswerQueMapper.selectByExample(bankAnswerQueExample);
+        for (BankAnswerQue bankAnswerQue : bankAnswerQueList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", bankAnswerQueList.indexOf(bankAnswerQue) + 1);
+            map.put("fillId", bankAnswerQue.getFillId());
+            map.put("content", bankAnswerQue.getFillContent());
+            map.put("composeFlag", bankAnswerQue.getComposeFlag());
+            map.put("fillAnswer", bankAnswerQue.getFillAnswer());
+            map.put("pictureSrc", bankAnswerQue.getPictureSrc());
+            map.put("answerExplain", bankAnswerQue.getAnswerExplain());
+            int langId = bankAnswerQue.getLangId();
+            map.put("langId", langId);
+            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(langId);
+            map.put("langName", programingLanguage.getLangName());
+            map.put("langImgSrc", programingLanguage.getLangImgSrc());
+            resultList.add(map);
+        }
+        return resultList;
+    }
+
+    @Override
+    public List<Map<String, Object>> searchAnswerList(String content, Integer langId, String composeFlag) {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        BankAnswerQueExample bankAnswerQueExample = new BankAnswerQueExample();
+        BankAnswerQueExample.Criteria criteria = bankAnswerQueExample.createCriteria();
+        if (!content.equals("undefined")) {
+            criteria.andFillContentLike("%" + content + "%");
+        }
+        if(langId != 0) {
+            criteria.andLangIdEqualTo(langId);
+        }
+        if (!composeFlag.equals("undefined")) {
+            criteria.andComposeFlagEqualTo(composeFlag);
+        }
+        bankAnswerQueExample.setOrderByClause("fill_id asc");
+        List<BankAnswerQue> bankAnswerQueList = bankAnswerQueMapper.selectByExample(bankAnswerQueExample);
+        for (BankAnswerQue bankAnswerQue : bankAnswerQueList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", bankAnswerQueList.indexOf(bankAnswerQue) + 1);
+            map.put("fillId", bankAnswerQue.getFillId());
+            map.put("content", bankAnswerQue.getFillContent());
+            map.put("pictureSrc", bankAnswerQue.getPictureSrc());
+            map.put("fillAnswer", bankAnswerQue.getFillAnswer());
+            map.put("composeFlag", bankAnswerQue.getComposeFlag());
+            map.put("answerExplain", bankAnswerQue.getAnswerExplain());
+            int allLangId = bankAnswerQue.getLangId();
+            map.put("langId", allLangId);
+            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(allLangId);
+            map.put("langName", programingLanguage.getLangName());
+            map.put("langImgSrc", programingLanguage.getLangImgSrc());
+            resultList.add(map);
+        }
+        return resultList;
+
+    }
+
+    @Override
+    public int deleteAnswer(Integer fillId) {
+        int result = bankAnswerQueMapper.deleteByPrimaryKey(fillId);
+        return result;
+    }
+
+    @Override
+    public int insertAnswerInfo(Map<String, Object> obj) {
+        String content = (String) obj.get("content");
+        String fillAnswer = (String) obj.get("fillAnswer");
+        String answerExplain = (String) obj.get("answerExplain");
+        Integer langId = (Integer) obj.get("langId");
+        String pictureSrc = (String) obj.get("pictureSrc");
+
+        BankAnswerQue bankAnswerQue = new BankAnswerQue();
+        bankAnswerQue.setFillContent(content);
+        bankAnswerQue.setFillAnswer(fillAnswer);
+        bankAnswerQue.setAnswerExplain(answerExplain);
+        bankAnswerQue.setPictureSrc(pictureSrc);
+        bankAnswerQue.setLangId(langId);
+
+        int result = bankAnswerQueMapper.insertSelective(bankAnswerQue);
+        return result;
+    }
+
+    @Override
+    public int updateAnswerInfo(Map<String, Object> obj) {
+        Integer fillId = (Integer) obj.get("fillId");
+        String content = (String) obj.get("content");
+        String fillAnswer = (String) obj.get("fillAnswer");
+        String answerExplain = (String) obj.get("answerExplain");
+        Integer langId = (Integer) obj.get("langId");
+        String pictureSrc=(String) obj.get("pictureSrc");
+
+        BankAnswerQue bankAnswerQue = new BankAnswerQue();
+        bankAnswerQue.setFillId(fillId);
+        bankAnswerQue.setFillContent(content);
+        bankAnswerQue.setFillAnswer(fillAnswer);
+        bankAnswerQue.setAnswerExplain(answerExplain);
+        bankAnswerQue.setLangId(langId);
+        bankAnswerQue.setPictureSrc(pictureSrc);
+
+        int result = bankAnswerQueMapper.updateByPrimaryKeySelective(bankAnswerQue);
+        return result;
+    }
+
+    @Override
+    public int inserAnswerList(List<Map<String, Object>> fillList) {
+        int result = 0;
+        for (Map<String, Object> fill : fillList) {
+            BankAnswerQue bankAnswerQue = new BankAnswerQue();
+            bankAnswerQue.setFillContent((String) fill.get("fillContent"));
+            bankAnswerQue.setFillAnswer((String) fill.get("fillAnswer"));
+            bankAnswerQue.setAnswerExplain((String) fill.get("answerExplain"));
+            bankAnswerQue.setLangId((Integer) fill.get("langId"));
+            bankAnswerQue.setPictureSrc((String) fill.get("pictureSrc"));
+            result = bankAnswerQueMapper.insertSelective(bankAnswerQue);
         }
         return result;
     }

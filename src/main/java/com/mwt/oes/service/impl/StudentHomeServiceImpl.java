@@ -8,6 +8,7 @@ import com.mwt.oes.util.MultipleAnswersUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -33,6 +34,8 @@ public class StudentHomeServiceImpl implements StudentHomeService {
     BankFillQueMapper bankFillQueMapper;
     @Autowired
     StudentPaperAnswerMapper studentPaperAnswerMapper;
+    @Autowired
+    BankAnswerQueMapper bankAnswerQueMapper;
     /*
         获取学生首页全部轮播图数据
      */
@@ -77,6 +80,18 @@ public class StudentHomeServiceImpl implements StudentHomeService {
         return result;
     }
 
+    @Override
+    public List<Paper> getPapersInfoByLangId(Integer langId) {
+        PaperExample example = new PaperExample();
+        PaperExample.Criteria criteria = example.createCriteria();
+        criteria.andVisibleEqualTo(1);
+        criteria.andLangIdEqualTo(langId);
+        criteria.andPaperTypeEqualTo(1);
+        example.setOrderByClause("paper_create_time asc");
+        List<Paper> result = paperMapper.selectByExample(example);
+        return result;
+    }
+
     /*
         通过paperId获取试卷信息
      */
@@ -85,6 +100,7 @@ public class StudentHomeServiceImpl implements StudentHomeService {
         Paper paper = paperMapper.selectByPrimaryKey(paperId);
         return paper;
     }
+
 
     /*
         通过paperId获取试卷问题信息
@@ -116,12 +132,19 @@ public class StudentHomeServiceImpl implements StudentHomeService {
         criteriaFill.andQueTypeEqualTo(4);
         int fillNum = paperQueMapper.countByExample(example1Fill);
 
+        PaperQueExample example1Answer = new PaperQueExample();
+        PaperQueExample.Criteria criteriaAnswer = example1Answer.createCriteria();
+        criteriaAnswer.andPaperIdEqualTo(paperId);
+        criteriaAnswer.andQueTypeEqualTo(5);
+        int answerNum = paperQueMapper.countByExample(example1Answer);
+
         Map<String, Integer> result = new HashMap<>();
         result.put("totalNum",totalNum);
         result.put("singleNum",singleNum);
         result.put("multipleNum",multipleNum);
         result.put("judgeNum",judgeNum);
         result.put("fillNum",fillNum);
+        result.put("answerNum",answerNum);
 
 
         return result;
@@ -322,12 +345,93 @@ public class StudentHomeServiceImpl implements StudentHomeService {
     }
 
     /*
+        获取试卷填空题列表信息
+     */
+    @Override
+    public List<Map<String, Object>> getFillQueListByPaperIdAndSno(Map obj) {
+        List<Map<String, Object>> listResult = new ArrayList<>();
+
+        List<Map<String,String>> fillQueList =
+                bankFillQueMapper.getFillQueListByPaperIdAndSno(obj);
+        for (Map bankFillQue : fillQueList){
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("fillId",bankFillQue.get("fill_id"));
+
+            map.put("fillContent",bankFillQue.get("fill_content"));
+
+            map.put("fillAnswer",bankFillQue.get("fill_answer"));
+
+            map.put("stuAnswer",bankFillQue.get("stu_answer"));
+
+            listResult.add(map);
+        }
+
+        return listResult;
+    }
+
+    /*
+        获取试卷填空题列表信息
+     */
+    @Override
+    public List<Map<String, Object>> getAnswerQueListByPaperId(Integer paperId) {
+        List<Map<String, Object>> listResult = new ArrayList<>();
+
+        List<BankAnswerQue> answerQueList =
+                bankAnswerQueMapper.getAnswerQueListByPaperId(paperId);
+        for (BankAnswerQue bankAnswerQue : answerQueList){
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("fillId",bankAnswerQue.getFillId());
+
+            map.put("pictureSrc",bankAnswerQue.getPictureSrc());
+
+            map.put("fillContent",bankAnswerQue.getFillContent());
+
+            listResult.add(map);
+        }
+
+        return listResult;
+    }
+
+    /*
+        获取试卷填空题列表信息
+     */
+    @Override
+    public List<Map<String, Object>> getAnswerQueListByPaperIdAndSno(Map obj) {
+        List<Map<String, Object>> listResult = new ArrayList<>();
+
+        List<Map<String,String>> answerQueList =
+                bankAnswerQueMapper.getAnswerQueListByPaperIdAndSno(obj);
+        for (Map bankAnswerQue : answerQueList){
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("fillId",bankAnswerQue.get("fill_id"));
+
+            map.put("fillContent",bankAnswerQue.get("fill_content"));
+
+            map.put("fillAnswer",bankAnswerQue.get("fill_answer"));
+
+            map.put("stuAnswer",bankAnswerQue.get("stu_answer"));
+
+            map.put("pictureSrc",bankAnswerQue.get("picture_src"));
+
+            listResult.add(map);
+        }
+
+        return listResult;
+    }
+
+    /*
         插入学生成绩表成绩信息和学生试卷答题记录信息
      */
     @Override
-    public int insertPaperAnswerAndPaperScore(String sno, Integer paperId, List<String> singleAnswers,
+    public int insertPaperAnswerAndPaperScore(String sno,
+                                              Integer paperId, List<String> singleAnswers,
                                               List<List<String>> multipleAnswers, List<String> judgeAnswers,
-                                              List<String> fillAnswers, int timeUsed){
+                                              List<String> fillAnswers,
+                                              List<String> answerAnswers,
+                                              int timeUsed){
 
         //通过paperId获取试卷信息，主要提取单选题，多选题，判断题和填空题分数
         Paper paper = paperMapper.selectByPrimaryKey(paperId);
@@ -336,86 +440,123 @@ public class StudentHomeServiceImpl implements StudentHomeService {
         int score = 0;
 
         //计算单选题分数
-        List<BankSingleChoiceQue> singleChoiceQueList = bankSingleChoiceQueMapper.getSingleQueListByPaperId(paperId);
-        for (int i = 0;i < singleChoiceQueList.size();i++){
-            String isCorrect = "0";
-            if(singleChoiceQueList.get(i).getSingleAnswer().equals(singleAnswers.get(i))){
-                score += paper.getSingleScore();
-                isCorrect = "1";
+        if(singleAnswers!=null && singleAnswers.size()>0){
+            List<BankSingleChoiceQue> singleChoiceQueList = bankSingleChoiceQueMapper.getSingleQueListByPaperId(paperId);
+            for (int i = 0; i < singleChoiceQueList.size(); i++) {
+                String isCorrect = "0";
+                StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
+                if (singleChoiceQueList.get(i).getSingleAnswer().equals(singleAnswers.get(i))) {
+                    score += paper.getSingleScore();
+                    isCorrect = "1";
+                    studentPaperAnswer.setScore(paper.getSingleScore());
+                }
+                studentPaperAnswer.setStuAnswer(singleAnswers.get(i));
+                studentPaperAnswer.setIscorrect(isCorrect);
+                studentPaperAnswer.setQueId(singleChoiceQueList.get(i).getPaperQue().getQueId());
+                studentPaperAnswer.setPaperId(paperId);
+                studentPaperAnswer.setSno(sno);
+                int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
             }
-            StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
-            studentPaperAnswer.setStuAnswer(singleAnswers.get(i));
-            studentPaperAnswer.setIscorrect(isCorrect);
-            studentPaperAnswer.setQueId(singleChoiceQueList.get(i).getPaperQue().getQueId());
-            studentPaperAnswer.setPaperId(paperId);
-            studentPaperAnswer.setSno(sno);
-            int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
         }
 
-        //计算多选题分数
-        List<BankMultipleChoiceQue> multipleChoiceQueList = bankMultipleChoiceQueMapper.getMultipleQueListByPaperId(paperId);
-        for (int i = 0;i < multipleChoiceQueList.size();i++){
-            String isCorrect = "0";
+            //计算多选题分数
+        if(multipleAnswers!=null && multipleAnswers.size()>0) {
+            List<BankMultipleChoiceQue> multipleChoiceQueList = bankMultipleChoiceQueMapper.getMultipleQueListByPaperId(paperId);
+            for (int i = 0; i < multipleChoiceQueList.size(); i++) {
+                String isCorrect = "0";
 
-            String sbMultipleAnswers = null;
-            if(multipleAnswers.get(i) != null){
-                StringBuffer sb = new StringBuffer();
-                for(String s : multipleAnswers.get(i)){
-                    sb.append(s);
+                String sbMultipleAnswers = null;
+                if (multipleAnswers.get(i) != null) {
+                    StringBuffer sb = new StringBuffer();
+                    for (String s : multipleAnswers.get(i)) {
+                        sb.append(s);
+                    }
+                    sbMultipleAnswers = MultipleAnswersUtil.ASCIISort(sb.toString());
                 }
-                sbMultipleAnswers = MultipleAnswersUtil.ASCIISort(sb.toString());
-            }
 //            System.out.println(sbMultipleAnswers);
 
-            if(multipleChoiceQueList.get(i).getMultipleAnswer().equals(sbMultipleAnswers)){
-                score += paper.getMultipleScore();
-                isCorrect = "1";
+                StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
+                if (multipleChoiceQueList.get(i).getMultipleAnswer().equals(sbMultipleAnswers)) {
+                    score += paper.getMultipleScore();
+                    isCorrect = "1";
+                    studentPaperAnswer.setScore(paper.getMultipleScore());
+                }
+                studentPaperAnswer.setStuAnswer(sbMultipleAnswers);
+                studentPaperAnswer.setIscorrect(isCorrect);
+                studentPaperAnswer.setQueId(multipleChoiceQueList.get(i).getPaperQue().getQueId());
+                studentPaperAnswer.setPaperId(paperId);
+                studentPaperAnswer.setSno(sno);
+                int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
             }
-            StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
-            studentPaperAnswer.setStuAnswer(sbMultipleAnswers);
-            studentPaperAnswer.setIscorrect(isCorrect);
-            studentPaperAnswer.setQueId(multipleChoiceQueList.get(i).getPaperQue().getQueId());
-            studentPaperAnswer.setPaperId(paperId);
-            studentPaperAnswer.setSno(sno);
-            int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
         }
 
-        //计算判断题分数
-        List<BankJudgeQue> judgeQueList = bankJudgeQueMapper.getJudgeQueListByPaperId(paperId);
-        for (int i = 0;i < judgeQueList.size();i++){
-            String isCorrect = "0";
-            if(judgeQueList.get(i).getJudgeAnswer().equals(judgeAnswers.get(i))){
-                score += paper.getJudgeScore();
-                isCorrect = "1";
+            //计算判断题分数
+        if(judgeAnswers!=null && judgeAnswers.size()>0) {
+            List<BankJudgeQue> judgeQueList = bankJudgeQueMapper.getJudgeQueListByPaperId(paperId);
+            for (int i = 0; i < judgeQueList.size(); i++) {
+                String isCorrect = "0";
+                StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
+                if (judgeQueList.get(i).getJudgeAnswer().equals(judgeAnswers.get(i))) {
+                    score += paper.getJudgeScore();
+                    isCorrect = "1";
+                    studentPaperAnswer.setScore(paper.getJudgeScore());
+                }
+                studentPaperAnswer.setStuAnswer(judgeAnswers.get(i));
+                studentPaperAnswer.setIscorrect(isCorrect);
+                studentPaperAnswer.setQueId(judgeQueList.get(i).getPaperQue().getQueId());
+                studentPaperAnswer.setPaperId(paperId);
+                studentPaperAnswer.setSno(sno);
+                int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
             }
-            StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
-            studentPaperAnswer.setStuAnswer(judgeAnswers.get(i));
-            studentPaperAnswer.setIscorrect(isCorrect);
-            studentPaperAnswer.setQueId(judgeQueList.get(i).getPaperQue().getQueId());
-            studentPaperAnswer.setPaperId(paperId);
-            studentPaperAnswer.setSno(sno);
-            int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
         }
-
         //计算填空题分数
-        List<BankFillQue> fillQueList = bankFillQueMapper.getFillQueListByPaperId(paperId);
-        for (int i = 0;i < fillQueList.size();i++){
-            String isCorrect = "0";
-            if(fillAnswers.get(i) != null){
+        if(fillAnswers!=null && fillAnswers.size()>0) {
+            List<BankFillQue> fillQueList = bankFillQueMapper.getFillQueListByPaperId(paperId);
+            for (int i = 0; i < fillQueList.size(); i++) {
+                String isCorrect = "0";
+            /*if(fillAnswers.get(i) != null){
                 if(fillQueList.get(i).getFillAnswer().equalsIgnoreCase(fillAnswers.get(i).trim())){
 //                    System.out.println("T" + fillQueList.get(i).getFillAnswer());
 //                    System.out.println("dd" + fillAnswers.get(i));
                     score += paper.getFillScore();
                     isCorrect = "1";
                 }
+            }*/
+                StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
+                studentPaperAnswer.setStuAnswer(fillAnswers.get(i));
+                studentPaperAnswer.setIscorrect(isCorrect);
+                studentPaperAnswer.setQueId(fillQueList.get(i).getPaperQue().getQueId());
+                studentPaperAnswer.setPaperId(paperId);
+                studentPaperAnswer.setSno(sno);
+                studentPaperAnswer.setScore(paper.getFillScore());
+
+                int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
             }
-            StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
-            studentPaperAnswer.setStuAnswer(fillAnswers.get(i));
-            studentPaperAnswer.setIscorrect(isCorrect);
-            studentPaperAnswer.setQueId(fillQueList.get(i).getPaperQue().getQueId());
-            studentPaperAnswer.setPaperId(paperId);
-            studentPaperAnswer.setSno(sno);
-            int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
+        }
+
+        if(answerAnswers!=null && answerAnswers.size()>0) {
+            //计算解答题分数
+            List<BankAnswerQue> answerAnswerList =
+                    bankAnswerQueMapper.getAnswerQueListByPaperId(paperId);
+            for (int i = 0; i < answerAnswerList.size(); i++) {
+                String isCorrect = "0";
+            /*if(fillAnswers.get(i) != null){
+                if(fillQueList.get(i).getFillAnswer().equalsIgnoreCase(fillAnswers.get(i).trim())){
+//                    System.out.println("T" + fillQueList.get(i).getFillAnswer());
+//                    System.out.println("dd" + fillAnswers.get(i));
+                    score += paper.getFillScore();
+                    isCorrect = "1";
+                }
+            }*/
+                StudentPaperAnswer studentPaperAnswer = new StudentPaperAnswer();
+                studentPaperAnswer.setStuAnswer(answerAnswers.get(i));
+                studentPaperAnswer.setIscorrect(isCorrect);
+                studentPaperAnswer.setQueId(answerAnswerList.get(i).getPaperQue().getQueId());
+                studentPaperAnswer.setPaperId(paperId);
+                studentPaperAnswer.setSno(sno);
+                studentPaperAnswer.setScore(paper.getAnswerScore());
+                int insertResult = studentPaperAnswerMapper.insertSelective(studentPaperAnswer);
+            }
         }
 
         //更新学生成绩表数据
@@ -432,13 +573,102 @@ public class StudentHomeServiceImpl implements StudentHomeService {
     }
 
     /*
-        请求获取当前试卷状态，即是否已完成
+       插入学生成绩表成绩信息和学生试卷答题记录信息
     */
-    public List<StudentPaperScore> getCurrentPaperStatus(String sno, Integer paperId){
+    @Override
+    public int updatePaperAnswerAndPaperScore(String sno,String tno,
+                                              Integer paperId,
+                                              List<String> fillScore,
+                                              List<String> answerScore){
+
+        //通过paperId获取试卷信息，主要提取单选题，多选题，判断题和填空题分数
+        Paper paper = paperMapper.selectByPrimaryKey(paperId);
+
+        //设置初始分数为0
+        int score = 0;
+
+        //计算填空题分数
+        PaperQueExample paperQueFillExample=new PaperQueExample();
+        PaperQueExample.Criteria fillCriteria=
+                paperQueFillExample.createCriteria();
+        fillCriteria.andPaperIdEqualTo(paperId);
+        fillCriteria.andQueTypeEqualTo(4);
+        paperQueFillExample.setOrderByClause("que_id asc");
+        List<PaperQue> paperQueList=
+                paperQueMapper.selectByExample(paperQueFillExample);
+        for(int i = 0; i < paperQueList.size(); i++){
+            String temp = null==fillScore.get(i)?"0":fillScore.get(i);
+            Integer si=new Integer(temp);
+            score+=si;
+            StudentPaperAnswerExample example = new StudentPaperAnswerExample();
+            StudentPaperAnswerExample.Criteria criteria = example.createCriteria();
+            criteria.andPaperIdEqualTo(paperId);
+            criteria.andQueIdEqualTo(paperQueList.get(i).getQueId());
+            List<StudentPaperAnswer> studentPaperAnswerList = studentPaperAnswerMapper.selectByExample(example);
+            StudentPaperAnswer studentPaperAnswer=studentPaperAnswerList.get(0);
+            studentPaperAnswer.setTno(tno);
+            studentPaperAnswer.setScore(si);
+            studentPaperAnswerMapper.updateByPrimaryKey(studentPaperAnswer);
+        }
+
+        //计算填空题分数
+        PaperQueExample paperQueAnswerExample=new PaperQueExample();
+        PaperQueExample.Criteria answerCriteria=
+                paperQueAnswerExample.createCriteria();
+        answerCriteria.andPaperIdEqualTo(paperId);
+        answerCriteria.andQueTypeEqualTo(5);
+        paperQueAnswerExample.setOrderByClause("que_id asc");
+        List<PaperQue> paperQueAnswerList=
+                paperQueMapper.selectByExample(paperQueAnswerExample);
+
+        for(int i = 0; i < paperQueAnswerList.size(); i++){
+            String temp = answerScore.get(i);
+            Integer si=new Integer(temp);
+            score+=si;
+            StudentPaperAnswerExample example = new StudentPaperAnswerExample();
+            StudentPaperAnswerExample.Criteria criteria = example.createCriteria();
+            criteria.andPaperIdEqualTo(paperId);
+            criteria.andQueIdEqualTo(paperQueAnswerList.get(i).getQueId());
+            List<StudentPaperAnswer> studentPaperAnswerList = studentPaperAnswerMapper.selectByExample(example);
+            StudentPaperAnswer studentPaperAnswer=studentPaperAnswerList.get(0);
+            studentPaperAnswer.setTno(tno);
+            studentPaperAnswer.setScore(si);
+            studentPaperAnswerMapper.updateByPrimaryKey(studentPaperAnswer);
+        }
+
+
+        //更新学生成绩表数据
         StudentPaperScoreExample studentPaperScoreExample = new StudentPaperScoreExample();
         StudentPaperScoreExample.Criteria criteria = studentPaperScoreExample.createCriteria();
         criteria.andSnoEqualTo(sno);
         criteria.andPaperIdEqualTo(paperId);
+        StudentPaperScore studentPaperScore =
+                studentPaperScoreMapper.selectByExample(studentPaperScoreExample).get(0);
+        score+=(null==studentPaperScore.getScore()?0:studentPaperScore.getScore());
+        studentPaperScore.setScore(score);
+        studentPaperScore.setTno(tno);
+        int updateResult =
+                studentPaperScoreMapper.updateByPrimaryKey(studentPaperScore);
+        return updateResult;
+    }
+
+    /*
+        请求获取当前试卷状态，即是否已完成
+    */
+    public List<StudentPaperScore> getCurrentPaperStatus(String sno, Integer paperId){
+
+        PaperExample paperExample=new PaperExample();
+        PaperExample.Criteria pCriteria=paperExample.createCriteria();
+        pCriteria.andPidEqualTo(paperId);
+        List<Paper> paperList=paperMapper.selectByExample(paperExample);
+        List<Integer> pids=new ArrayList<>();
+        for(Paper paper : paperList){
+            pids.add(paper.getPaperId());
+        }
+        StudentPaperScoreExample studentPaperScoreExample = new StudentPaperScoreExample();
+        StudentPaperScoreExample.Criteria criteria = studentPaperScoreExample.createCriteria();
+        criteria.andSnoEqualTo(sno);
+        criteria.andPaperIdIn(pids);
         List<StudentPaperScore> listResult = studentPaperScoreMapper.selectByExample(studentPaperScoreExample);
         return listResult;
     }
@@ -508,6 +738,19 @@ public class StudentHomeServiceImpl implements StudentHomeService {
         fillScoreMap.put("name","填空题");
         fillScoreMap.put("value",studentPaperAnswerMapper.selectFillCorrectCount(studentPaperAnswerCorrect)*paper.getFillScore());
         chartDataRingScore.add(fillScoreMap);
+
+        Map<String, Object> answerCorrectMap = new HashMap<>();
+        answerCorrectMap.put("name","简答题" + queNum.get("answerNum") + "道");
+        answerCorrectMap.put("value",
+                studentPaperAnswerMapper.selectAnswerCorrectCount(studentPaperAnswerCorrect));
+        chartDataBarCorrect.add(answerCorrectMap);
+
+        //判断题得分情况
+        Map<String, Object> answerScoreMap = new HashMap<>();
+        answerScoreMap.put("name","简答题");
+        answerScoreMap.put("value",
+                studentPaperAnswerMapper.selectAnswerCorrectCount(studentPaperAnswerCorrect)*paper.getFillScore());
+        chartDataRingScore.add(answerScoreMap);
 
         //该试卷成绩排行结果
         List<Map<String, Object>> chartDataLineRanking = new ArrayList<>();

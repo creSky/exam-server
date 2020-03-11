@@ -5,6 +5,7 @@ import com.mwt.oes.domain.BankFillQueExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BankFillQueMapper {
     int countByExample(BankFillQueExample example);
@@ -30,6 +31,8 @@ public interface BankFillQueMapper {
     int updateByPrimaryKey(BankFillQue record);
 
     List<BankFillQue> getFillQueListByPaperId(Integer paperId);
+
+    List<Map<String,String>> getFillQueListByPaperIdAndSno(Map paperId);
 
     List<BankFillQue> getRandomFillByCountAndLangId(@Param("langId") Integer langId, @Param("fillNum")Integer fillNum);
 }

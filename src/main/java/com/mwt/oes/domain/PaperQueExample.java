@@ -463,6 +463,68 @@ public class PaperQueExample {
             addCriterion("fill_id not between", value1, value2, "fillId");
             return (Criteria) this;
         }
+//---------
+
+        public Criteria andAnswerIdIsNull() {
+            addCriterion("answer_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdIsNotNull() {
+            addCriterion("answer_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdEqualTo(Integer value) {
+            addCriterion("answer_id =", value, "answerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdNotEqualTo(Integer value) {
+            addCriterion("answer_id <>", value, "answerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdGreaterThan(Integer value) {
+            addCriterion("answer_id >", value, "answerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("answer_id >=", value, "answerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdLessThan(Integer value) {
+            addCriterion("answer_id <", value, "answerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdLessThanOrEqualTo(Integer value) {
+            addCriterion("answer_id <=", value, "answerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdIn(List<Integer> values) {
+            addCriterion("answer_id in", values, "answerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdNotIn(List<Integer> values) {
+            addCriterion("answer_id not in", values, "answerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdBetween(Integer value1, Integer value2) {
+            addCriterion("answer_id between", value1, value2, "fillId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("answer_id not between", value1, value2, "fillId");
+            return (Criteria) this;
+        }
+
 
         public Criteria andPaperIdIsNull() {
             addCriterion("paper_id is null");

@@ -29,6 +29,16 @@ public class BankSingleChoiceQue {
 
     private PaperQue paperQue;
 
+    private String pictureSrc;
+
+    public String getPictureSrc() {
+        return pictureSrc;
+    }
+
+    public void setPictureSrc(String pictureSrc) {
+        this.pictureSrc = pictureSrc;
+    }
+
     public Integer getSingleId() {
         return singleId;
     }

@@ -15,6 +15,7 @@
     <result column="compose_flag" property="composeFlag" jdbcType="VARCHAR" />
     <result column="answer_explain" property="answerExplain" jdbcType="VARCHAR" />
     <result column="lang_id" property="langId" jdbcType="INTEGER" />
+    <result column="picture_src" property="pictureSrc" jdbcType="VARCHAR" />
 
     <association property="paperQue" javaType="com.mwt.oes.domain.PaperQue">
       <id column="que_id" property="queId" jdbcType="INTEGER" />
@@ -81,7 +82,7 @@
   </sql>
   <sql id="Base_Column_List" >
     multiple_id, multiple_content, choice_A, choice_B, choice_C, choice_D, choice_E, 
-    choice_F, choice_G, multiple_answer, compose_flag, answer_explain, lang_id
+    choice_F, choice_G, multiple_answer, compose_flag, answer_explain, lang_id,picture_src
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mwt.oes.domain.BankMultipleChoiceQueExample" >
     select
@@ -105,7 +106,8 @@
   </select>
 
   <select id="getMultipleQueListByPaperId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-    SELECT q.que_id,q.que_type,m.multiple_id,m.multiple_content,m.choice_A,m.choice_B,m.choice_C,m.choice_D,m.choice_E,m.choice_F,m.choice_G,m.multiple_answer,m.compose_flag,m.answer_explain,m.lang_id
+    SELECT
+    q.que_id,q.que_type,m.multiple_id,m.multiple_content,m.choice_A,m.choice_B,m.choice_C,m.choice_D,m.choice_E,m.choice_F,m.choice_G,m.multiple_answer,m.compose_flag,m.answer_explain,m.lang_id,m.picture_src
     FROM paper_que q,bank_multiple_choice_que m
     WHERE paper_id=#{paperId,jdbcType=INTEGER} AND q.multiple_id=m.multiple_id
   </select>
@@ -129,12 +131,12 @@
       choice_B, choice_C, choice_D, 
       choice_E, choice_F, choice_G, 
       multiple_answer, compose_flag, answer_explain, 
-      lang_id)
+      lang_id,picture_src)
     values (#{multipleId,jdbcType=INTEGER}, #{multipleContent,jdbcType=VARCHAR}, #{choiceA,jdbcType=VARCHAR}, 
       #{choiceB,jdbcType=VARCHAR}, #{choiceC,jdbcType=VARCHAR}, #{choiceD,jdbcType=VARCHAR}, 
       #{choiceE,jdbcType=VARCHAR}, #{choiceF,jdbcType=VARCHAR}, #{choiceG,jdbcType=VARCHAR}, 
       #{multipleAnswer,jdbcType=VARCHAR}, #{composeFlag,jdbcType=VARCHAR}, #{answerExplain,jdbcType=VARCHAR}, 
-      #{langId,jdbcType=INTEGER})
+      #{langId,jdbcType=INTEGER}, #{pictureSrc,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.mwt.oes.domain.BankMultipleChoiceQue" >
     insert into bank_multiple_choice_que
@@ -178,6 +180,9 @@
       <if test="langId != null" >
         lang_id,
       </if>
+      <if test="pictureSrc != null" >
+        picture_src,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="multipleId != null" >
@@ -218,6 +223,9 @@
       </if>
       <if test="langId != null" >
         #{langId,jdbcType=INTEGER},
+      </if>
+      <if test="pictureSrc != null" >
+        #{pictureSrc,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -269,6 +277,9 @@
       <if test="record.langId != null" >
         lang_id = #{record.langId,jdbcType=INTEGER},
       </if>
+      <if test="record.pictureSrc != null" >
+        picture_src = #{record.pictureSrc,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -288,7 +299,8 @@
       multiple_answer = #{record.multipleAnswer,jdbcType=VARCHAR},
       compose_flag = #{record.composeFlag,jdbcType=VARCHAR},
       answer_explain = #{record.answerExplain,jdbcType=VARCHAR},
-      lang_id = #{record.langId,jdbcType=INTEGER}
+      lang_id = #{record.langId,jdbcType=INTEGER},
+    picture_src = #{record.pictureSrc,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -332,6 +344,9 @@
       <if test="langId != null" >
         lang_id = #{langId,jdbcType=INTEGER},
       </if>
+      <if test="pictureSrc != null" >
+        picture_src = #{pictureSrc,jdbcType=VARCHAR},
+      </if>
     </set>
     where multiple_id = #{multipleId,jdbcType=INTEGER}
   </update>
@@ -348,7 +363,8 @@
       multiple_answer = #{multipleAnswer,jdbcType=VARCHAR},
       compose_flag = #{composeFlag,jdbcType=VARCHAR},
       answer_explain = #{answerExplain,jdbcType=VARCHAR},
-      lang_id = #{langId,jdbcType=INTEGER}
+      lang_id = #{langId,jdbcType=INTEGER},
+      picture_src = #{pictureSrc,jdbcType=VARCHAR}
     where multiple_id = #{multipleId,jdbcType=INTEGER}
   </update>
 </mapper>

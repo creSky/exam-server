@@ -1,9 +1,6 @@
 package com.mwt.oes.service.impl;
 
-import com.mwt.oes.dao.PaperMapper;
-import com.mwt.oes.dao.StudentMapper;
-import com.mwt.oes.dao.StudentPaperAnswerMapper;
-import com.mwt.oes.dao.StudentPaperScoreMapper;
+import com.mwt.oes.dao.*;
 import com.mwt.oes.domain.*;
 import com.mwt.oes.service.StudentHomeService;
 import com.mwt.oes.service.StudentSystemService;
@@ -28,12 +25,21 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
     StudentHomeService studentHomeService;
     @Autowired
     StudentSystemService studentSystemService;
+    @Autowired
+    TeacherMapper teacherMapper;
+    @Autowired
+    ProgramingLanguageMapper programingLanguageMapper;
 
     @Override
     public List<Student> getStudentsList() {
         StudentExample studentExample = new StudentExample();
         studentExample.setOrderByClause("sno asc");
         List<Student> resultList = studentMapper.selectByExample(studentExample);
+        for (Student student:resultList){
+            ProgramingLanguage programingLanguage =
+                    programingLanguageMapper.selectByPrimaryKey(student.getLangId());
+            student.setLangName(programingLanguage.getLangName());
+        }
         return resultList;
     }
 
@@ -61,6 +67,11 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
         }
         studentExample.setOrderByClause("sno asc");
         List<Student> resultList = studentMapper.selectByExample(studentExample);
+        for (Student student:resultList){
+            ProgramingLanguage programingLanguage =
+                    programingLanguageMapper.selectByPrimaryKey(student.getLangId());
+            student.setLangName(programingLanguage.getLangName());
+        }
         return resultList;
     }
 
@@ -85,6 +96,8 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
             if( studentPaperScore.getTimeUsed() != null){
                 timeUsed = studentPaperScore.getEndTime().getTime() - studentPaperScore.getStartTime().getTime();
             }
+            Teacher teacher=
+                    teacherMapper.selectByPrimaryKey(studentPaperScore.getTno());
             map.put("timeUsed", timeUsed);
             map.put("sno", student.getSno());
             map.put("stuName", student.getStuName());
@@ -93,6 +106,7 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
             map.put("score", studentPaperScore.getScore());
             map.put("startTime", studentPaperScore.getStartTime());
             map.put("endTime", studentPaperScore.getEndTime());
+            map.put("teaName", null==teacher?null:teacher.getTeaName());
             resultList.add(map);
         }
         return resultList;
@@ -155,6 +169,8 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
             if( studentPaperScore.getTimeUsed() != null){
                 timeUsed = studentPaperScore.getEndTime().getTime() - studentPaperScore.getStartTime().getTime();
             }
+            Teacher teacher=
+                    teacherMapper.selectByPrimaryKey(studentPaperScore.getTno());
             mapSearch.put("timeUsed", timeUsed);
             mapSearch.put("paperId", studentPaperScore.getPaperId());
             mapSearch.put("sno", student.getSno());
@@ -164,6 +180,7 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
             mapSearch.put("score", studentPaperScore.getScore());
             mapSearch.put("startTime", studentPaperScore.getStartTime());
             mapSearch.put("endTime", studentPaperScore.getEndTime());
+            mapSearch.put("teaName", null==teacher?null:teacher.getTeaName());
             resultList.add(mapSearch);
         }
         return resultList;
@@ -182,7 +199,8 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
         int totalScore = queNum.get("singleNum")*paper.getSingleScore()
                 + queNum.get("multipleNum")*paper.getMultipleScore()
                 + queNum.get("judgeNum")*paper.getJudgeScore()
-                + queNum.get("fillNum")*paper.getFillScore();
+                + queNum.get("fillNum")*paper.getFillScore()
+                + queNum.get("answerNum")*paper.getAnswerScore();
         Map<String, Object> paperInfo = new HashMap<>();
         paperInfo.put("paperName",paper.getPaperName());
         paperInfo.put("paperDuration",paper.getPaperDuration());
@@ -195,6 +213,7 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
         int multipleData[] = new int[studentPaperScoreList.size()];
         int judgeData[] = new int[studentPaperScoreList.size()];
         int fillData[] = new int[studentPaperScoreList.size()];
+        int answerData[] = new int[studentPaperScoreList.size()];
         int scoreData[] = new int[studentPaperScoreList.size()];
         long timeUsedData[] = new long[studentPaperScoreList.size()];
 //        List<String> snoData = new ArrayList<>();
@@ -217,6 +236,7 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
             int multiple = 0;
             int judge = 0;
             int fill = 0;
+            int answer = 0;
             int score = 0;
             if(studentPaperScore.getScore() != null){
                 StudentPaperAnswer studentPaperAnswerCorrect = new StudentPaperAnswer();
@@ -226,6 +246,8 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
                 multiple = studentPaperAnswerMapper.selectMultipleCorrectCount(studentPaperAnswerCorrect)*paper.getMultipleScore();
                 judge = studentPaperAnswerMapper.selectJudgeCorrectCount(studentPaperAnswerCorrect)*paper.getJudgeScore();
                 fill = studentPaperAnswerMapper.selectFillCorrectCount(studentPaperAnswerCorrect)*paper.getFillScore();
+                fill =
+                        studentPaperAnswerMapper.selectAnswerCorrectCount(studentPaperAnswerCorrect)*paper.getAnswerScore();
                 score = studentPaperScore.getScore();
             }
 //            singleData.add(single);
@@ -237,6 +259,7 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
             multipleData[i] = multiple;
             judgeData[i] = judge;
             fillData[i] = fill;
+            answerData[i] = answer;
             scoreData[i] = score;
 
             long timeUsed = 0;
@@ -251,6 +274,7 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
         map.put("multipleData",multipleData);
         map.put("judgeData",judgeData);
         map.put("fillData",fillData);
+        map.put("answerData",answerData);
         map.put("scoreData",scoreData);
         map.put("timeUsedData",timeUsedData);
         return map;

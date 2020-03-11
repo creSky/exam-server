@@ -15,6 +15,26 @@ public class StudentPaperAnswer {
 
     private String iscollect;
 
+    private Integer score;
+
+    private String tno;
+
+    public String getTno() {
+        return tno;
+    }
+
+    public void setTno(String tno) {
+        this.tno = tno;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
     public Integer getAnswerId() {
         return answerId;
     }

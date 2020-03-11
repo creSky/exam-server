@@ -31,4 +31,13 @@ public interface TeacherBankManageService {
     public int insertFillInfo(Map<String, Object> obj);
     public int updateFillInfo(Map<String, Object> obj);
     public int inserFillList(List<Map<String, Object>> fillList);
+
+
+    public List<Map<String, Object>> getAnswerList();
+    public List<Map<String, Object>> searchAnswerList(String content,
+                                                 Integer langId, String composeFlag);
+    public int deleteAnswer(Integer fillId);
+    public int insertAnswerInfo(Map<String, Object> obj);
+    public int updateAnswerInfo(Map<String, Object> obj);
+    public int inserAnswerList(List<Map<String, Object>> fillAnswer);
 }

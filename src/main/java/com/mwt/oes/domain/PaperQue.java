@@ -15,6 +15,16 @@ public class PaperQue {
 
     private Integer paperId;
 
+    private Integer answerId;
+
+    public Integer getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(Integer answerId) {
+        this.answerId = answerId;
+    }
+
     public Integer getQueId() {
         return queId;
     }

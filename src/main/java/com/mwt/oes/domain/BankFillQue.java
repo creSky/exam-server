@@ -1,5 +1,7 @@
 package com.mwt.oes.domain;
 
+import org.springframework.data.annotation.Transient;
+
 public class BankFillQue {
     private Integer fillId;
 
@@ -14,6 +16,26 @@ public class BankFillQue {
     private Integer langId;
 
     private PaperQue paperQue;
+    @Transient
+    private String stuAnswer;
+
+    private String pictureSrc;
+
+    public String getPictureSrc() {
+        return pictureSrc;
+    }
+
+    public void setPictureSrc(String pictureSrc) {
+        this.pictureSrc = pictureSrc;
+    }
+
+    public String getStuAnswer() {
+        return stuAnswer;
+    }
+
+    public void setStuAnswer(String stuAnswer) {
+        this.stuAnswer = stuAnswer;
+    }
 
     public Integer getFillId() {
         return fillId;

@@ -1,5 +1,7 @@
 package com.mwt.oes.domain;
 
+import org.springframework.data.annotation.Transient;
+
 import java.util.Date;
 
 public class Student {
@@ -24,6 +26,27 @@ public class Student {
     private String stuStatus;
 
     private String stuSecurityCode;
+
+    private Integer langId;
+
+    @Transient
+    private String langName;
+
+    public String getLangName() {
+        return langName;
+    }
+
+    public void setLangName(String langName) {
+        this.langName = langName;
+    }
+
+    public Integer getLangId() {
+        return langId;
+    }
+
+    public void setLangId(Integer langId) {
+        this.langId = langId;
+    }
 
     public String getSno() {
         return sno;

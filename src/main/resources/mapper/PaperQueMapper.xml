@@ -9,6 +9,7 @@
     <result column="judge_id" property="judgeId" jdbcType="INTEGER" />
     <result column="fill_id" property="fillId" jdbcType="INTEGER" />
     <result column="paper_id" property="paperId" jdbcType="INTEGER" />
+    <result column="answer_id" property="answerId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -69,7 +70,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    que_id, que_type, single_id, multiple_id, judge_id, fill_id, paper_id
+    que_id, que_type, single_id, multiple_id, judge_id, fill_id,
+    paper_id,answer_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mwt.oes.domain.PaperQueExample" >
     select
@@ -104,10 +106,10 @@
   <insert id="insert" parameterType="com.mwt.oes.domain.PaperQue" >
     insert into paper_que (que_id, que_type, single_id, 
       multiple_id, judge_id, fill_id, 
-      paper_id)
+      paper_id,answer_id)
     values (#{queId,jdbcType=INTEGER}, #{queType,jdbcType=INTEGER}, #{singleId,jdbcType=INTEGER}, 
       #{multipleId,jdbcType=INTEGER}, #{judgeId,jdbcType=INTEGER}, #{fillId,jdbcType=INTEGER}, 
-      #{paperId,jdbcType=INTEGER})
+      #{paperId,jdbcType=INTEGER},#{answerId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.mwt.oes.domain.PaperQue" >
     insert into paper_que
@@ -129,6 +131,9 @@
       </if>
       <if test="fillId != null" >
         fill_id,
+      </if>
+      <if test="answerId != null" >
+        answer_id,
       </if>
       <if test="paperId != null" >
         paper_id,
@@ -152,6 +157,9 @@
       </if>
       <if test="fillId != null" >
         #{fillId,jdbcType=INTEGER},
+      </if>
+      <if test="answerId != null" >
+        #{answerId,jdbcType=INTEGER},
       </if>
       <if test="paperId != null" >
         #{paperId,jdbcType=INTEGER},
@@ -185,6 +193,9 @@
       <if test="record.fillId != null" >
         fill_id = #{record.fillId,jdbcType=INTEGER},
       </if>
+      <if test="record.answerId != null" >
+        fill_id = #{record.answerId,jdbcType=INTEGER},
+      </if>
       <if test="record.paperId != null" >
         paper_id = #{record.paperId,jdbcType=INTEGER},
       </if>
@@ -201,6 +212,7 @@
       multiple_id = #{record.multipleId,jdbcType=INTEGER},
       judge_id = #{record.judgeId,jdbcType=INTEGER},
       fill_id = #{record.fillId,jdbcType=INTEGER},
+    answer_id = #{record.answerId,jdbcType=INTEGER},
       paper_id = #{record.paperId,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -224,6 +236,9 @@
       <if test="fillId != null" >
         fill_id = #{fillId,jdbcType=INTEGER},
       </if>
+      <if test="answerId != null" >
+        answer_id = #{answerId,jdbcType=INTEGER},
+      </if>
       <if test="paperId != null" >
         paper_id = #{paperId,jdbcType=INTEGER},
       </if>
@@ -237,6 +252,7 @@
       multiple_id = #{multipleId,jdbcType=INTEGER},
       judge_id = #{judgeId,jdbcType=INTEGER},
       fill_id = #{fillId,jdbcType=INTEGER},
+      answer_id = #{answerId,jdbcType=INTEGER},
       paper_id = #{paperId,jdbcType=INTEGER}
     where que_id = #{queId,jdbcType=INTEGER}
   </update>

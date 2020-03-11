@@ -36,4 +36,6 @@ public interface StudentPaperAnswerMapper {
     int selectJudgeCorrectCount(StudentPaperAnswer record);
 
     int selectFillCorrectCount(StudentPaperAnswer record);
+
+    int selectAnswerCorrectCount(StudentPaperAnswer record);
 }

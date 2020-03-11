@@ -1,5 +1,7 @@
 package com.mwt.oes.util;
 
+import com.riozenc.titanTool.properties.Global;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -19,7 +21,8 @@ public class FindContentWithImage {
             pictureFile = matcher.group();
             pictureFile = pictureFile.substring(3, pictureFile.length()-3);
             String beforePicNameContent = content.substring(0,matcher.start());
-            String afterPicNameContent = "http://qiniu.maweitao.top/programImages/" + pictureFile;
+            String afterPicNameContent =
+                    Global.getConfig("ip")+"/programImages/" + pictureFile;
             map.put("content",beforePicNameContent);
             map.put("pictureSrc",afterPicNameContent);
             return map;

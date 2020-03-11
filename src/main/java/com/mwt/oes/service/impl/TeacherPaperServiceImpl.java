@@ -31,11 +31,15 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
     BankJudgeQueMapper bankJudgeQueMapper;
     @Autowired
     BankFillQueMapper bankFillQueMapper;
+    @Autowired
+    BankAnswerQueMapper bankAnswerQueMapper;
 
     @Override
     public List<Map<String, Object>> getPapersList() {
         List<Map<String, Object>> resultList = new ArrayList<>();
         PaperExample paperExample = new PaperExample();
+        PaperExample.Criteria criteria=paperExample.createCriteria();
+        criteria.andVisibleEqualTo(1);
         paperExample.setOrderByClause("paper_id asc");
         List<Paper> paperList = paperMapper.selectByExample(paperExample);
         for (Paper paper : paperList) {
@@ -76,7 +80,6 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         }
         return resultList;
     }
-
     @Override
     public List<Map<String, Object>> getLangOptions() {
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -106,6 +109,7 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         if(paperType != 0){
             criteria.andPaperTypeEqualTo(paperType);
         }
+        criteria.andVisibleEqualTo(1);
         paperExample.setOrderByClause("paper_id asc");
         List<Paper> paperList = paperMapper.selectByExample(paperExample);
         for (Paper paper : paperList) {
@@ -176,6 +180,7 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         List<Map<String, Object>> multipleData = new ArrayList<>();
         List<Map<String, Object>> judgeData = new ArrayList<>();
         List<Map<String, Object>> fillData = new ArrayList<>();
+        List<Map<String, Object>> answerData = new ArrayList<>();
 
         // 获取单选题问题列表
         List<BankSingleChoiceQue> singleChoiceQueList = bankSingleChoiceQueMapper.getSingleQueListByPaperId(paperId);
@@ -348,10 +353,38 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
             fillData.add(fillMap);
         }
 
+        int fillNum = fillQueList.size();
+        // 获取简答题问题列表
+        List<BankAnswerQue> answerQueList =
+                bankAnswerQueMapper.getAnswerQueListByPaperId(paperId);
+        for (BankAnswerQue bankAnswerQue : answerQueList){
+            int fillIndex = answerQueList.indexOf(bankAnswerQue);
+            Map<String, Object> fillMap = new HashMap<>();
+            fillMap.put("id",
+                    fillIndex + 5 + singleNum + multipleNum + judgeNum+fillNum);
+
+            //获取填空题题目内容
+            fillMap.put("label",
+                    (fillIndex + 1 + singleNum + multipleNum + judgeNum+fillNum) +
+                            "、" + bankAnswerQue.getFillContent());
+
+            //获取填空题正确答案
+            List<Map<String, Object>> answerAnswersList = new ArrayList<>();
+            Map<String, Object> fillAnswer = new HashMap<>();
+            fillAnswer.put("id",
+                    fillIndex*1 + totalNum + 5 + singleNum*8 + multipleNum*8 + judgeNum*1+fillNum*1);
+            fillAnswer.put("label","正确答案：" + bankAnswerQue.getFillAnswer());
+            answerAnswersList.add(fillAnswer);
+
+            fillMap.put("children",answerAnswersList);
+            fillData.add(fillMap);
+        }
+
         map.put("singleData",singleData);
         map.put("multipleData",multipleData);
         map.put("judgeData",judgeData);
         map.put("fillData",fillData);
+        map.put("answerData",answerData);
         return map;
     }
 
@@ -369,6 +402,8 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         Integer judgeNum = (Integer) obj.get("judgeNum");
         Integer fillScore = (Integer) obj.get("fillScore");
         Integer fillNum = (Integer) obj.get("fillNum");
+        Integer anwerNum = (Integer) obj.get("answerNum");
+        Integer anwerScore = (Integer) obj.get("answerScore");
         Integer langId = (Integer) obj.get("langId");
         Paper paper = new Paper();
         paper.setPaperName(paperName);
@@ -380,10 +415,18 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         paper.setJudgeScore(judgeScore);
         paper.setFillScore(fillScore);
         paper.setLangId(langId);
+        paper.setSingleNum(singleNum);
+        paper.setMultipleNum(multipleNum);
+        paper.setJudgeNum(judgeNum);
+        paper.setFillNum(fillNum);
+        paper.setAnswerScore(anwerScore);
+        paper.setAnswerNum(anwerNum);
         paper.setPaperCreateTime(new Date());
         paper.setPaperType(1);
+        paper.setVisible(1);
         int paperId = paperMapper.selectMaxPaperId() + 1;
         paper.setPaperId(paperId);
+        paper.setPid(paperId);
 
         //  插入试卷信息到paper表
         int result = paperMapper.insertSelective(paper);
@@ -445,8 +488,153 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
             bankFillQueMapper.updateByPrimaryKeySelective(bankFillQue);
         }
 
+        //  简答题
+        List<BankAnswerQue> bankAnswerQueList =
+                bankAnswerQueMapper.getRandomAnswerByCountAndLangId(langId,
+                        fillNum);
+        for (BankAnswerQue bankAnswerQue : bankAnswerQueList) {
+            int fillId = bankAnswerQue.getFillId();
+            PaperQue paperQue = new PaperQue();
+            paperQue.setQueType(5);
+            paperQue.setAnswerId(fillId);
+            paperQue.setPaperId(paperId);
+            paperQueMapper.insertSelective(paperQue);
+            //更新compose_flag字段
+            bankAnswerQue.setComposeFlag("1");
+            bankAnswerQueMapper.updateByPrimaryKeySelective(bankAnswerQue);
+        }
+
         return result;
     }
+
+
+    @Override
+    public Paper randomInsertPaperInfoByPaper(Paper obj) {
+        String paperName = obj.getPaperName();
+        Integer paramPaperId=obj.getPaperId();
+        Integer paperDuration = obj.getPaperDuration();
+        Integer paperDifficulty = obj.getPaperDifficulty();
+        String paperAttention = obj.getPaperAttention();
+        Integer singleScore = obj.getSingleScore();
+        Integer singleNum = obj.getSingleNum();
+        Integer multipleScore = obj.getMultipleScore();
+        Integer multipleNum = obj.getMultipleNum();
+        Integer judgeScore = obj.getJudgeScore();
+        Integer judgeNum = obj.getJudgeNum();
+        Integer fillScore = obj.getFillScore();
+        Integer fillNum = obj.getFillNum();
+        Integer answerNum=obj.getAnswerNum();
+        Integer answerScore=obj.getAnswerScore();
+        Integer langId = obj.getLangId();
+        Paper paper = new Paper();
+        paper.setPaperName(paperName);
+        paper.setPaperDuration(paperDuration);
+        paper.setPaperDifficulty(paperDifficulty);
+        paper.setPaperAttention(paperAttention);
+        paper.setSingleScore(singleScore);
+        paper.setSingleNum(singleNum);
+        paper.setMultipleScore(multipleScore);
+        paper.setMultipleNum(multipleNum);
+        paper.setJudgeScore(judgeScore);
+        paper.setJudgeNum(judgeNum);
+        paper.setFillScore(fillScore);
+        paper.setFillNum(fillNum);
+        paper.setAnswerNum(answerNum);
+        paper.setAnswerScore(answerScore);
+        paper.setLangId(langId);
+        paper.setPaperCreateTime(new Date());
+        paper.setPaperType(1);
+        paper.setPid(paramPaperId);
+        int paperId = paperMapper.selectMaxPaperId() + 1;
+        paper.setPaperId(paperId);
+
+        //  插入试卷信息到paper表
+        int result = paperMapper.insertSelective(paper);
+
+        //  插入试卷问题信息到paper_que表
+        //  单选题
+        if(singleNum!=null && singleNum!=0){
+            List<BankSingleChoiceQue> bankSingleChoiceQueList = bankSingleChoiceQueMapper.getRandomSingleByCountAndLangId(langId, singleNum);
+            for (BankSingleChoiceQue bankSingleChoiceQue : bankSingleChoiceQueList) {
+                int singleId = bankSingleChoiceQue.getSingleId();
+                PaperQue paperQue = new PaperQue();
+                paperQue.setQueType(1);
+                paperQue.setSingleId(singleId);
+                paperQue.setPaperId(paperId);
+                paperQueMapper.insertSelective(paperQue);
+                //更新compose_flag字段
+                bankSingleChoiceQue.setComposeFlag("1");
+                bankSingleChoiceQueMapper.updateByPrimaryKeySelective(bankSingleChoiceQue);
+            }
+        }
+
+        //  多选题
+        if(multipleNum!=null && multipleNum!=0){
+        List<BankMultipleChoiceQue> bankMultipleChoiceQueList = bankMultipleChoiceQueMapper.getRandomMultipleByCountAndLangId(langId, multipleNum);
+        for (BankMultipleChoiceQue bankMultipleChoiceQue : bankMultipleChoiceQueList) {
+            int multipleId = bankMultipleChoiceQue.getMultipleId();
+            PaperQue paperQue = new PaperQue();
+            paperQue.setQueType(2);
+            paperQue.setMultipleId(multipleId);
+            paperQue.setPaperId(paperId);
+            paperQueMapper.insertSelective(paperQue);
+            //更新compose_flag字段
+            bankMultipleChoiceQue.setComposeFlag("1");
+            bankMultipleChoiceQueMapper.updateByPrimaryKeySelective(bankMultipleChoiceQue);
+        }
+        }
+
+        //  判断题
+        if(judgeNum!=null && judgeNum!=0) {
+            List<BankJudgeQue> bankJudgeQueList = bankJudgeQueMapper.getRandomJudgeByCountAndLangId(langId, judgeNum);
+            for (BankJudgeQue bankJudgeQue : bankJudgeQueList) {
+                int judgeId = bankJudgeQue.getJudgeId();
+                PaperQue paperQue = new PaperQue();
+                paperQue.setQueType(3);
+                paperQue.setJudgeId(judgeId);
+                paperQue.setPaperId(paperId);
+                paperQueMapper.insertSelective(paperQue);
+                //更新compose_flag字段
+                bankJudgeQue.setComposeFlag("1");
+                bankJudgeQueMapper.updateByPrimaryKeySelective(bankJudgeQue);
+            }
+        }
+
+        //  填空题
+        if(fillNum!=null && fillNum!=0) {
+            List<BankFillQue> bankFillQueList = bankFillQueMapper.getRandomFillByCountAndLangId(langId, fillNum);
+            for (BankFillQue bankFillQue : bankFillQueList) {
+                int fillId = bankFillQue.getFillId();
+                PaperQue paperQue = new PaperQue();
+                paperQue.setQueType(4);
+                paperQue.setFillId(fillId);
+                paperQue.setPaperId(paperId);
+                paperQueMapper.insertSelective(paperQue);
+                //更新compose_flag字段
+                bankFillQue.setComposeFlag("1");
+                bankFillQueMapper.updateByPrimaryKeySelective(bankFillQue);
+            }
+        }
+        //  简答题
+        if(answerNum!=null && answerNum!=0) {
+            List<BankAnswerQue> bankAnswerQueList =
+                    bankAnswerQueMapper.getRandomAnswerByCountAndLangId(langId,
+                            answerNum);
+            for (BankAnswerQue bankAnswerQue : bankAnswerQueList) {
+                int fillId = bankAnswerQue.getFillId();
+                PaperQue paperQue = new PaperQue();
+                paperQue.setQueType(5);
+                paperQue.setAnswerId(fillId);
+                paperQue.setPaperId(paperId);
+                paperQueMapper.insertSelective(paperQue);
+                //更新compose_flag字段
+                bankAnswerQue.setComposeFlag("1");
+                bankAnswerQueMapper.updateByPrimaryKeySelective(bankAnswerQue);
+            }
+        }
+        return paper;
+    }
+
 
     @Override
     public Map<String, Object> getPaperQueDetailByLangId(Integer langId) {
@@ -456,6 +644,7 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         List<Map<String, Object>> multipleData = new ArrayList<>();
         List<Map<String, Object>> judgeData = new ArrayList<>();
         List<Map<String, Object>> fillData = new ArrayList<>();
+        List<Map<String, Object>> answerData = new ArrayList<>();
 
         BankSingleChoiceQueExample bankSingleChoiceQueExample = new BankSingleChoiceQueExample();
         BankSingleChoiceQueExample.Criteria criteriaSingle = bankSingleChoiceQueExample.createCriteria();
@@ -532,10 +721,32 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
             fillData.add(fillMap);
         }
 
+        BankAnswerQueExample bankAnswerQueExample = new BankAnswerQueExample();
+        BankAnswerQueExample.Criteria criteriaAnswer =
+                bankAnswerQueExample.createCriteria();
+        criteriaFill.andLangIdEqualTo(langId);
+        List<BankAnswerQue> bankAnswerQueList =
+                bankAnswerQueMapper.selectByExample(bankAnswerQueExample);
+        for (BankAnswerQue bankAnswerQue : bankAnswerQueList) {
+            int fillId = bankAnswerQue.getFillId();
+            Map<String, Object> answerMap = new HashMap<>();
+            // 在每个fillId前加上4连接
+            int id =
+                    (int) (Math.pow(10,String.valueOf(fillId).length())*5 + fillId);
+            answerMap.put("id",id);
+            //获取简答题题目内容
+            String composeFlag = bankAnswerQue.getComposeFlag();
+            String composeStr = composeFlag.equals("1") ? "（已组过）" : "（未组过）";
+            answerMap.put("label",composeStr + (bankFillQueList.indexOf(bankAnswerQue) + 1) + "、" + bankAnswerQue.getFillContent());
+
+            answerData.add(answerMap);
+        }
+
         map.put("singleData",singleData);
         map.put("multipleData",multipleData);
         map.put("judgeData",judgeData);
         map.put("fillData",fillData);
+        map.put("answerData",answerData);
         return map;
     }
 
@@ -553,6 +764,8 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         List<Integer> judgeNum = (List<Integer>) obj.get("judgeNum");
         Integer fillScore = (Integer) obj.get("fillScore");
         List<Integer> fillNum = (List<Integer>) obj.get("fillNum");
+        Integer answerScore = (Integer) obj.get("answerScore");
+        List<Integer> answerNum = (List<Integer>) obj.get("answerNum");
         Integer langId = (Integer) obj.get("langId");
         Paper paper = new Paper();
         paper.setPaperName(paperName);
@@ -563,11 +776,14 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         paper.setMultipleScore(multipleScore);
         paper.setJudgeScore(judgeScore);
         paper.setFillScore(fillScore);
+        paper.setAnswerScore(answerScore);
         paper.setLangId(langId);
         paper.setPaperCreateTime(new Date());
         paper.setPaperType(2);
+        paper.setVisible(1);
         int paperId = paperMapper.selectMaxPaperId() + 1;
         paper.setPaperId(paperId);
+        paper.setPid(paperId);
 
         //  插入试卷信息到paper表
         int result = paperMapper.insertSelective(paper);
@@ -623,6 +839,20 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
             bankFillQue.setFillId(fillId);
             bankFillQue.setComposeFlag("1");
             bankFillQueMapper.updateByPrimaryKeySelective(bankFillQue);
+        }
+
+        //填空题
+        for (Integer answerId : answerNum) {
+            PaperQue paperQue = new PaperQue();
+            paperQue.setQueType(5);
+            paperQue.setAnswerId(answerId);
+            paperQue.setPaperId(paperId);
+            paperQueMapper.insertSelective(paperQue);
+            //更新compose_flag字段
+            BankAnswerQue bankAnswerQue = new BankAnswerQue();
+            bankAnswerQue.setFillId(answerId);
+            bankAnswerQue.setComposeFlag("1");
+            bankAnswerQueMapper.updateByPrimaryKeySelective(bankAnswerQue);
         }
 
         return result;

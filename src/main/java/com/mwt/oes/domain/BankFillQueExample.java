@@ -503,6 +503,69 @@ public class BankFillQueExample {
             addCriterion("lang_id not between", value1, value2, "langId");
             return (Criteria) this;
         }
+
+        ///
+
+        public Criteria andPictureSrcIsNull() {
+            addCriterion("picture_src  is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcIsNotNull() {
+            addCriterion("picture_src  is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcEqualTo(Integer value) {
+            addCriterion("picture_src  =", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcNotEqualTo(Integer value) {
+            addCriterion("picture_src  <>", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcGreaterThan(Integer value) {
+            addCriterion("picture_src  >", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcGreaterThanOrEqualTo(Integer value) {
+            addCriterion("picture_src  >=", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcLessThan(Integer value) {
+            addCriterion("picture_src  <", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcLessThanOrEqualTo(Integer value) {
+            addCriterion("picture_src  <=", value, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcIn(List<Integer> values) {
+            addCriterion("picture_src  in", values, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcNotIn(List<Integer> values) {
+            addCriterion("picture_src  not in", values, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcBetween(Integer value1, Integer value2) {
+            addCriterion("picture_src  between", value1, value2, "pictureSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andPictureSrcNotBetween(Integer value1,
+                                                Integer value2) {
+            addCriterion("picture_src  not between", value1, value2, "pictureSrc");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

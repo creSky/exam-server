@@ -175,6 +175,79 @@ public class StudentExample {
             return (Criteria) this;
         }
 
+
+        //
+        public Criteria andLangIdIsNull() {
+            addCriterion("lang_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdIsNotNull() {
+            addCriterion("lang_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdEqualTo(Integer value) {
+            addCriterion("lang_id =", value, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdNotEqualTo(Integer value) {
+            addCriterion("lang_id <>", value, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdGreaterThan(Integer value) {
+            addCriterion("lang_id >", value, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("lang_id >=", value, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdLessThan(Integer value) {
+            addCriterion("lang_id <", value, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdLessThanOrEqualTo(Integer value) {
+            addCriterion("lang_id <=", value, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdLike(Integer value) {
+            addCriterion("lang_id like", value, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdNotLike(Integer value) {
+            addCriterion("lang_id not like", value, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdIn(List<Integer> values) {
+            addCriterion("lang_id in", values, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdNotIn(List<Integer> values) {
+            addCriterion("lang_id not in", values, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdBetween(Integer value1, Integer value2) {
+            addCriterion("lang_id between", value1, value2, "lang_id");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("lang_id not between", value1, value2, "lang_id");
+            return (Criteria) this;
+        }
+
+
         public Criteria andStuPswIsNull() {
             addCriterion("stu_psw is null");
             return (Criteria) this;

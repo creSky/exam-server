@@ -9,6 +9,7 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import com.riozenc.titanTool.properties.Global;
 
 public class QiniuCloudUtil {
 
@@ -25,7 +26,7 @@ public class QiniuCloudUtil {
     //base64方式上传
     public static String put64image(byte[] data, String key){
         //图片的外链地址
-        StringBuffer imgUrl  = new StringBuffer("http://qiniu.maweitao.top/");
+        StringBuffer imgUrl  = new StringBuffer(Global.getConfig("ip"));
 
         //构造一个带指定Zone对象的配置类
         Configuration cfg = new Configuration(Zone.zone0());

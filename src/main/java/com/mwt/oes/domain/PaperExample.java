@@ -545,6 +545,129 @@ public class PaperExample {
             return (Criteria) this;
         }
 
+
+        //
+        public Criteria andVisibleIsNull() {
+            addCriterion("visible is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleIsNotNull() {
+            addCriterion("visible is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleEqualTo(Integer value) {
+            addCriterion("visible =", value, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleNotEqualTo(Integer value) {
+            addCriterion("visible <>", value, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleGreaterThan(Integer value) {
+            addCriterion("visible >", value, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleGreaterThanOrEqualTo(Integer value) {
+            addCriterion("visible >=", value, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleLessThan(Integer value) {
+            addCriterion("visible <", value, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleLessThanOrEqualTo(Integer value) {
+            addCriterion("visible <=", value, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleIn(List<Integer> values) {
+            addCriterion("visible in", values, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleNotIn(List<Integer> values) {
+            addCriterion("visible not in", values, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleBetween(Integer value1, Integer value2) {
+            addCriterion("visible between", value1, value2, "visible");
+            return (Criteria) this;
+        }
+
+        public Criteria andVisibleNotBetween(Integer value1, Integer value2) {
+            addCriterion("visible not between", value1, value2, "visible");
+            return (Criteria) this;
+        }
+        //
+        //
+        public Criteria andPidIsNull() {
+            addCriterion("pid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidIsNotNull() {
+            addCriterion("pid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidEqualTo(Integer value) {
+            addCriterion("pid =", value, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidNotEqualTo(Integer value) {
+            addCriterion("pid <>", value, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidGreaterThan(Integer value) {
+            addCriterion("pid >", value, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("pid >=", value, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidLessThan(Integer value) {
+            addCriterion("pid <", value, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidLessThanOrEqualTo(Integer value) {
+            addCriterion("pid <=", value, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidIn(List<Integer> values) {
+            addCriterion("pid in", values, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidNotIn(List<Integer> values) {
+            addCriterion("pid not in", values, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidBetween(Integer value1, Integer value2) {
+            addCriterion("pid between", value1, value2, "pid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPidNotBetween(Integer value1, Integer value2) {
+            addCriterion("pid not between", value1, value2, "pid");
+            return (Criteria) this;
+        }
+
         public Criteria andSingleScoreIsNull() {
             addCriterion("single_score is null");
             return (Criteria) this;
@@ -782,6 +905,67 @@ public class PaperExample {
 
         public Criteria andFillScoreNotBetween(Integer value1, Integer value2) {
             addCriterion("fill_score not between", value1, value2, "fillScore");
+            return (Criteria) this;
+        }
+
+        //简答
+        public Criteria andAnswerScoreIsNull() {
+            addCriterion("answer_score is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreIsNotNull() {
+            addCriterion("answer_score is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreEqualTo(Integer value) {
+            addCriterion("answer_score =", value, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreNotEqualTo(Integer value) {
+            addCriterion("answer_score <>", value, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreGreaterThan(Integer value) {
+            addCriterion("answer_score >", value, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreGreaterThanOrEqualTo(Integer value) {
+            addCriterion("answer_score >=", value, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreLessThan(Integer value) {
+            addCriterion("answer_score <", value, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreLessThanOrEqualTo(Integer value) {
+            addCriterion("answer_score <=", value, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreIn(List<Integer> values) {
+            addCriterion("answer_score in", values, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreNotIn(List<Integer> values) {
+            addCriterion("answer_score not in", values, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreBetween(Integer value1, Integer value2) {
+            addCriterion("answer_score between", value1, value2, "answerScore");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerScoreNotBetween(Integer value1, Integer value2) {
+            addCriterion("answer_score not between", value1, value2, "answerScore");
             return (Criteria) this;
         }
 

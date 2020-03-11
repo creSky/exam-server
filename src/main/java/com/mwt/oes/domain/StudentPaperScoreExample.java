@@ -474,7 +474,77 @@ public class StudentPaperScoreExample {
             addCriterion("sno not between", value1, value2, "sno");
             return (Criteria) this;
         }
+//
 
+        public Criteria andTnoIsNull() {
+            addCriterion("tno is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoIsNotNull() {
+            addCriterion("tno is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoEqualTo(String value) {
+            addCriterion("tno =", value, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoNotEqualTo(String value) {
+            addCriterion("tno <>", value, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoGreaterThan(String value) {
+            addCriterion("tno >", value, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoGreaterThanOrEqualTo(String value) {
+            addCriterion("tno >=", value, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoLessThan(String value) {
+            addCriterion("tno <", value, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoLessThanOrEqualTo(String value) {
+            addCriterion("tno <=", value, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoLike(String value) {
+            addCriterion("tno like", value, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoNotLike(String value) {
+            addCriterion("tno not like", value, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoIn(List<String> values) {
+            addCriterion("tno in", values, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoNotIn(List<String> values) {
+            addCriterion("tno not in", values, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoBetween(String value1, String value2) {
+            addCriterion("tno between", value1, value2, "tno");
+            return (Criteria) this;
+        }
+
+        public Criteria andTnoNotBetween(String value1, String value2) {
+            addCriterion("tno not between", value1, value2, "tno");
+            return (Criteria) this;
+        }
         public Criteria andPaperIdIsNull() {
             addCriterion("paper_id is null");
             return (Criteria) this;
