@@ -13,7 +13,15 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>oes</name>
 	<description>onlineexam-system-backend</description>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
+	<!--指定仓库地址-->
+	<distributionManagement>
+		<repository>
+			<!--此名称要和.m2/settings.xml中设置的ID一致-->
+			<id>titan-release</id>
+			<url>http://172.21.29.55:8082/repository/titan-release/</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -29,6 +37,7 @@
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>2.0.0</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -47,9 +56,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.riozenc</groupId>
-			<artifactId>titanTool</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>2.1.6.RELEASE</version>
 		</dependency>
 		<!-- 热部署模块 -->
 		<dependency>
@@ -65,40 +74,33 @@
 			<version>7.2.11</version>
 			<scope>compile</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.56</version>
+		</dependency>
 		<!-- websocket 模块 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
-		<!--用于移除嵌入式tomcat插件-->
-		<!--<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>-->
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.28</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
-		<finalName>oes</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<fork>true</fork>
-				</configuration>
+				<version>2.0.3.RELEASE</version>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,6 +1,7 @@
 package com.mwt.oes.util;
 
-import com.riozenc.titanTool.properties.Global;
+
+import com.mwt.oes.properties.Global;
 
 import java.util.HashMap;
 import java.util.Map;

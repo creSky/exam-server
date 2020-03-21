@@ -12,14 +12,13 @@ import org.springframework.context.annotation.Configuration;
 import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
-@Configuration
 @MapperScan("com.mwt.oes.dao")//与dao层的@Mapper二选一写上即可(主要作用是扫包)
 public class OesApplication extends SpringBootServletInitializer {
 
-	@Override
+	/*@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(OesApplication.class);
-	}
+	}*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(OesApplication.class, args);
@@ -28,7 +27,7 @@ public class OesApplication extends SpringBootServletInitializer {
 	/**
 	 * 文件上传配置
 	 * @return
-	 */
+	 *//*
 	@Bean
 	public MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
@@ -38,5 +37,5 @@ public class OesApplication extends SpringBootServletInitializer {
 		factory.setMaxRequestSize("102400KB");
 		return factory.createMultipartConfig();
 	}
-
+*/
 }

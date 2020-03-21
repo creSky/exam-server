@@ -106,6 +106,7 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
             map.put("score", studentPaperScore.getScore());
             map.put("startTime", studentPaperScore.getStartTime());
             map.put("endTime", studentPaperScore.getEndTime());
+            map.put("docPath", studentPaperScore.getDocPath());
             map.put("teaName", null==teacher?null:teacher.getTeaName());
             resultList.add(map);
         }
@@ -180,6 +181,7 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
             mapSearch.put("score", studentPaperScore.getScore());
             mapSearch.put("startTime", studentPaperScore.getStartTime());
             mapSearch.put("endTime", studentPaperScore.getEndTime());
+            mapSearch.put("docPath", studentPaperScore.getDocPath());
             mapSearch.put("teaName", null==teacher?null:teacher.getTeaName());
             resultList.add(mapSearch);
         }
@@ -314,6 +316,29 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
         map.put("failItemCount", studentList.size() - successItemCount);
         return map;
     }
+    @Override
+    public List<StudentSingleEntity> singleExportDoc(Map record){
+        return teacherMapper.singleExportDoc(record);
+    }
 
+    @Override
+    public List<StudentMultiEntity> multiExportDoc(Map record){
+        return teacherMapper.multiExportDoc(record);
+    }
+
+    @Override
+    public List<StudentJudgeEntity> judgeExportDoc(Map record){
+        return teacherMapper.judgeExportDoc(record);
+    }
+
+    @Override
+    public List<StudentFillEntity> fillExportDoc(Map record){
+        return teacherMapper.fillExportDoc(record);
+    }
+
+    @Override
+    public List<StudentAnswerEntity> answerExportDoc(Map record){
+        return teacherMapper.answerExportDoc(record);
+    }
 
 }

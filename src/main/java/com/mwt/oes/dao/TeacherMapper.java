@@ -1,8 +1,10 @@
 package com.mwt.oes.dao;
 
-import com.mwt.oes.domain.Teacher;
-import com.mwt.oes.domain.TeacherExample;
+import com.mwt.oes.domain.*;
+
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface TeacherMapper {
@@ -27,4 +29,16 @@ public interface TeacherMapper {
     int updateByPrimaryKeySelective(Teacher record);
 
     int updateByPrimaryKey(Teacher record);
+
+    List<StudentSingleEntity> singleExportDoc(Map record);
+
+    List<StudentMultiEntity> multiExportDoc(Map record);
+
+    List<StudentJudgeEntity> judgeExportDoc(Map record);
+
+    List<StudentFillEntity> fillExportDoc(Map record);
+
+    List<StudentAnswerEntity> answerExportDoc(Map record);
+
+
 }

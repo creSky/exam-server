@@ -1,6 +1,7 @@
 package com.mwt.oes.util;
 
 import com.google.gson.Gson;
+import com.mwt.oes.properties.Global;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -9,7 +10,6 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
-import com.riozenc.titanTool.properties.Global;
 
 public class QiniuCloudUtil {
 

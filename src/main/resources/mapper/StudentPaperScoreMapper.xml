@@ -10,6 +10,7 @@
     <result column="sno" property="sno" jdbcType="CHAR" />
     <result column="paper_id" property="paperId" jdbcType="INTEGER" />
     <result column="tno" property="tno" jdbcType="CHAR" />
+    <result column="doc_path" property="docPath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    score_id, score, time_used, start_time, end_time, sno, paper_id,tno
+    score_id, score, time_used, start_time, end_time, sno, paper_id,tno,doc_path
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mwt.oes.domain.StudentPaperScoreExample" >
     select
@@ -105,10 +106,11 @@
   <insert id="insert" parameterType="com.mwt.oes.domain.StudentPaperScore" >
     insert into student_paper_score (score_id, score, time_used, 
       start_time, end_time, sno, 
-      paper_id,tno)
+      paper_id,tno,doc_path)
     values (#{scoreId,jdbcType=INTEGER}, #{score,jdbcType=INTEGER}, #{timeUsed,jdbcType=INTEGER}, 
       #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{sno,jdbcType=CHAR}, 
-      #{paperId,jdbcType=INTEGER}, #{tno,jdbcType=CHAR})
+      #{paperId,jdbcType=INTEGER}, #{tno,jdbcType=CHAR},
+      #{docPath,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.mwt.oes.domain.StudentPaperScore" >
     insert into student_paper_score
@@ -136,6 +138,9 @@
       </if>
       <if test="tno != null" >
         tno,
+      </if>
+      <if test="docPath != null" >
+        doc_path,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -198,6 +203,9 @@
       <if test="record.tno != null" >
         tno = #{record.tno,jdbcType=CHAR},
       </if>
+      <if test="record.docPath != null" >
+        doc_path = #{record.docPath,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -213,6 +221,7 @@
       sno = #{record.sno,jdbcType=CHAR},
       paper_id = #{record.paperId,jdbcType=INTEGER},
     tno = #{record.tno,jdbcType=CHAR},
+    doc_path = #{record.docPath,jdbcType=VARCHAR},
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -241,6 +250,9 @@
       <if test="tno != null" >
         tno = #{tno,jdbcType=CHAR},
       </if>
+      <if test="docPath != null" >
+        doc_path = #{docPath,jdbcType=VARCHAR},
+      </if>
     </set>
     where score_id = #{scoreId,jdbcType=INTEGER}
   </update>
@@ -252,7 +264,8 @@
       end_time = #{endTime,jdbcType=TIMESTAMP},
       sno = #{sno,jdbcType=CHAR},
       paper_id = #{paperId,jdbcType=INTEGER},
-      tno = #{tno,jdbcType=CHAR}
+      tno = #{tno,jdbcType=CHAR},
+      doc_path = #{docPath,jdbcType=VARCHAR}
     where score_id = #{scoreId,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -604,6 +604,66 @@ public class StudentPaperScoreExample {
             addCriterion("paper_id not between", value1, value2, "paperId");
             return (Criteria) this;
         }
+        //
+        public Criteria andDocPathIsNull() {
+            addCriterion("doc_path is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathIsNotNull() {
+            addCriterion("doc_path is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathEqualTo(Integer value) {
+            addCriterion("doc_path =", value, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathNotEqualTo(Integer value) {
+            addCriterion("doc_path <>", value, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathGreaterThan(Integer value) {
+            addCriterion("doc_path >", value, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathGreaterThanOrEqualTo(Integer value) {
+            addCriterion("doc_path >=", value, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathLessThan(Integer value) {
+            addCriterion("doc_path <", value, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathLessThanOrEqualTo(Integer value) {
+            addCriterion("doc_path <=", value, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathIn(List<Integer> values) {
+            addCriterion("doc_path in", values, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathNotIn(List<Integer> values) {
+            addCriterion("doc_path not in", values, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathBetween(Integer value1, Integer value2) {
+            addCriterion("doc_path between", value1, value2, "docPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andDocPathNotBetween(Integer value1, Integer value2) {
+            addCriterion("doc_path not between", value1, value2, "docPath");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

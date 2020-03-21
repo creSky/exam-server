@@ -61,17 +61,28 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
             map.put("multipleScore", paper.getMultipleScore());
             map.put("judgeScore", paper.getJudgeScore());
             map.put("fillScore", paper.getFillScore());
+            map.put("answerScore", paper.getAnswerScore());
 
             Map<String, Integer> queNum = studentHomeService.getPaperQueNumByPaperId(paper.getPaperId());
+            int multipleNum=0;
+            if(null!=queNum.get("multipleNum")&&!"".equals(queNum.get("multipleNum"))){
+                multipleNum=queNum.get("multipleNum");
+            }
+            int judgeNum=0;
+            if(null!=queNum.get("judgeNum")&&!"".equals(queNum.get("judgeNum"))){
+                judgeNum=queNum.get("judgeNum");
+            }
             int totalScore = queNum.get("singleNum")*paper.getSingleScore()
-                    + queNum.get("multipleNum")*paper.getMultipleScore()
-                    + queNum.get("judgeNum")*paper.getJudgeScore()
-                    + queNum.get("fillNum")*paper.getFillScore();
+                    + multipleNum*paper.getMultipleScore()
+                    + judgeNum*paper.getJudgeScore()
+                    + queNum.get("fillNum")*paper.getFillScore()
+                    +queNum.get("answerNum")*paper.getAnswerScore();
             map.put("totalScore", totalScore);
             map.put("singleNum", queNum.get("singleNum"));
-            map.put("multipleNum", queNum.get("multipleNum"));
-            map.put("judgeNum", queNum.get("judgeNum"));
+            map.put("multipleNum",multipleNum);
+            map.put("judgeNum", judgeNum);
             map.put("fillNum", queNum.get("fillNum"));
+            map.put("answerNum", queNum.get("answerNum"));
             map.put("totalNum", queNum.get("totalNum"));
 
             map.put("participateNum", paper.getParticipateNum());
@@ -85,6 +96,9 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         List<Map<String, Object>> resultList = new ArrayList<>();
         ProgramingLanguageExample programingLanguageExample = new ProgramingLanguageExample();
         programingLanguageExample.setOrderByClause("lang_id asc");
+        ProgramingLanguageExample.Criteria criteria=
+                programingLanguageExample.createCriteria();
+        criteria.andIsRecommendEqualTo("1");
         List<ProgramingLanguage> programingLanguageList = programingLanguageMapper.selectByExample(programingLanguageExample);
         for (ProgramingLanguage programingLanguage : programingLanguageList) {
             Map<String, Object> map = new HashMap<>();
@@ -131,17 +145,28 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
             map.put("multipleScore", paper.getMultipleScore());
             map.put("judgeScore", paper.getJudgeScore());
             map.put("fillScore", paper.getFillScore());
+            map.put("answerScore", paper.getAnswerScore());
 
             Map<String, Integer> queNum = studentHomeService.getPaperQueNumByPaperId(paper.getPaperId());
+            int multipleNum=0;
+            if(null!=queNum.get("multipleNum")&&!"".equals(queNum.get("multipleNum"))){
+                multipleNum=queNum.get("multipleNum");
+            }
+            int judgeNum=0;
+            if(null!=queNum.get("judgeNum")&&!"".equals(queNum.get("judgeNum"))){
+                judgeNum=queNum.get("judgeNum");
+            }
             int totalScore = queNum.get("singleNum")*paper.getSingleScore()
-                    + queNum.get("multipleNum")*paper.getMultipleScore()
-                    + queNum.get("judgeNum")*paper.getJudgeScore()
-                    + queNum.get("fillNum")*paper.getFillScore();
+                    + multipleNum*paper.getMultipleScore()
+                    + judgeNum*paper.getJudgeScore()
+                    + queNum.get("fillNum")*paper.getFillScore()
+                    + queNum.get("answerNum")*paper.getAnswerScore();
             map.put("totalScore", totalScore);
             map.put("singleNum", queNum.get("singleNum"));
             map.put("multipleNum", queNum.get("multipleNum"));
             map.put("judgeNum", queNum.get("judgeNum"));
             map.put("fillNum", queNum.get("fillNum"));
+            map.put("answerNum", queNum.get("answerNum"));
             map.put("totalNum", queNum.get("totalNum"));
 
             map.put("participateNum", paper.getParticipateNum());
@@ -397,9 +422,21 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
         Integer singleScore = (Integer) obj.get("singleScore");
         Integer singleNum = (Integer) obj.get("singleNum");
         Integer multipleScore = (Integer) obj.get("multipleScore");
+        if(multipleScore==null){
+            multipleScore=0;
+        }
         Integer multipleNum = (Integer) obj.get("multipleNum");
+        if(multipleNum==null){
+            multipleNum=0;
+        }
         Integer judgeScore = (Integer) obj.get("judgeScore");
+        if(judgeScore==null){
+            judgeScore=0;
+        }
         Integer judgeNum = (Integer) obj.get("judgeNum");
+        if(judgeNum==null){
+            judgeNum=0;
+        }
         Integer fillScore = (Integer) obj.get("fillScore");
         Integer fillNum = (Integer) obj.get("fillNum");
         Integer anwerNum = (Integer) obj.get("answerNum");
@@ -433,48 +470,54 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
 
         //  插入试卷问题信息到paper_que表
         //  单选题
-        List<BankSingleChoiceQue> bankSingleChoiceQueList = bankSingleChoiceQueMapper.getRandomSingleByCountAndLangId(langId, singleNum);
-        for (BankSingleChoiceQue bankSingleChoiceQue : bankSingleChoiceQueList) {
-            int singleId = bankSingleChoiceQue.getSingleId();
-            PaperQue paperQue = new PaperQue();
-            paperQue.setQueType(1);
-            paperQue.setSingleId(singleId);
-            paperQue.setPaperId(paperId);
-            paperQueMapper.insertSelective(paperQue);
-            //更新compose_flag字段
-            bankSingleChoiceQue.setComposeFlag("1");
-            bankSingleChoiceQueMapper.updateByPrimaryKeySelective(bankSingleChoiceQue);
+        if(singleNum!=null && singleNum!=0) {
+            List<BankSingleChoiceQue> bankSingleChoiceQueList = bankSingleChoiceQueMapper.getRandomSingleByCountAndLangId(langId, singleNum);
+            for (BankSingleChoiceQue bankSingleChoiceQue : bankSingleChoiceQueList) {
+                int singleId = bankSingleChoiceQue.getSingleId();
+                PaperQue paperQue = new PaperQue();
+                paperQue.setQueType(1);
+                paperQue.setSingleId(singleId);
+                paperQue.setPaperId(paperId);
+                paperQueMapper.insertSelective(paperQue);
+                //更新compose_flag字段
+                bankSingleChoiceQue.setComposeFlag("1");
+                bankSingleChoiceQueMapper.updateByPrimaryKeySelective(bankSingleChoiceQue);
+            }
         }
-
         //  多选题
-        List<BankMultipleChoiceQue> bankMultipleChoiceQueList = bankMultipleChoiceQueMapper.getRandomMultipleByCountAndLangId(langId, multipleNum);
-        for (BankMultipleChoiceQue bankMultipleChoiceQue : bankMultipleChoiceQueList) {
-            int multipleId = bankMultipleChoiceQue.getMultipleId();
-            PaperQue paperQue = new PaperQue();
-            paperQue.setQueType(2);
-            paperQue.setMultipleId(multipleId);
-            paperQue.setPaperId(paperId);
-            paperQueMapper.insertSelective(paperQue);
-            //更新compose_flag字段
-            bankMultipleChoiceQue.setComposeFlag("1");
-            bankMultipleChoiceQueMapper.updateByPrimaryKeySelective(bankMultipleChoiceQue);
+        if(multipleNum!=null && multipleNum!=0) {
+            List<BankMultipleChoiceQue> bankMultipleChoiceQueList = bankMultipleChoiceQueMapper.getRandomMultipleByCountAndLangId(langId, multipleNum);
+            for (BankMultipleChoiceQue bankMultipleChoiceQue : bankMultipleChoiceQueList) {
+                int multipleId = bankMultipleChoiceQue.getMultipleId();
+                PaperQue paperQue = new PaperQue();
+                paperQue.setQueType(2);
+                paperQue.setMultipleId(multipleId);
+                paperQue.setPaperId(paperId);
+                paperQueMapper.insertSelective(paperQue);
+                //更新compose_flag字段
+                bankMultipleChoiceQue.setComposeFlag("1");
+                bankMultipleChoiceQueMapper.updateByPrimaryKeySelective(bankMultipleChoiceQue);
+            }
         }
 
         //  判断题
-        List<BankJudgeQue> bankJudgeQueList = bankJudgeQueMapper.getRandomJudgeByCountAndLangId(langId, judgeNum);
-        for (BankJudgeQue bankJudgeQue : bankJudgeQueList) {
-            int judgeId = bankJudgeQue.getJudgeId();
-            PaperQue paperQue = new PaperQue();
-            paperQue.setQueType(3);
-            paperQue.setJudgeId(judgeId);
-            paperQue.setPaperId(paperId);
-            paperQueMapper.insertSelective(paperQue);
-            //更新compose_flag字段
-            bankJudgeQue.setComposeFlag("1");
-            bankJudgeQueMapper.updateByPrimaryKeySelective(bankJudgeQue);
+        if(judgeNum!=null && judgeNum!=0) {
+            List<BankJudgeQue> bankJudgeQueList = bankJudgeQueMapper.getRandomJudgeByCountAndLangId(langId, judgeNum);
+            for (BankJudgeQue bankJudgeQue : bankJudgeQueList) {
+                int judgeId = bankJudgeQue.getJudgeId();
+                PaperQue paperQue = new PaperQue();
+                paperQue.setQueType(3);
+                paperQue.setJudgeId(judgeId);
+                paperQue.setPaperId(paperId);
+                paperQueMapper.insertSelective(paperQue);
+                //更新compose_flag字段
+                bankJudgeQue.setComposeFlag("1");
+                bankJudgeQueMapper.updateByPrimaryKeySelective(bankJudgeQue);
+            }
         }
 
         //  填空题
+        if(fillNum!=null && fillNum!=0) {
         List<BankFillQue> bankFillQueList = bankFillQueMapper.getRandomFillByCountAndLangId(langId, fillNum);
         for (BankFillQue bankFillQue : bankFillQueList) {
             int fillId = bankFillQue.getFillId();
@@ -487,23 +530,25 @@ public class TeacherPaperServiceImpl implements TeacherPaperService {
             bankFillQue.setComposeFlag("1");
             bankFillQueMapper.updateByPrimaryKeySelective(bankFillQue);
         }
-
-        //  简答题
-        List<BankAnswerQue> bankAnswerQueList =
-                bankAnswerQueMapper.getRandomAnswerByCountAndLangId(langId,
-                        fillNum);
-        for (BankAnswerQue bankAnswerQue : bankAnswerQueList) {
-            int fillId = bankAnswerQue.getFillId();
-            PaperQue paperQue = new PaperQue();
-            paperQue.setQueType(5);
-            paperQue.setAnswerId(fillId);
-            paperQue.setPaperId(paperId);
-            paperQueMapper.insertSelective(paperQue);
-            //更新compose_flag字段
-            bankAnswerQue.setComposeFlag("1");
-            bankAnswerQueMapper.updateByPrimaryKeySelective(bankAnswerQue);
         }
 
+        //  简答题
+        if(anwerNum!=null && anwerNum!=0) {
+            List<BankAnswerQue> bankAnswerQueList =
+                    bankAnswerQueMapper.getRandomAnswerByCountAndLangId(langId,
+                            anwerNum);
+            for (BankAnswerQue bankAnswerQue : bankAnswerQueList) {
+                int fillId = bankAnswerQue.getFillId();
+                PaperQue paperQue = new PaperQue();
+                paperQue.setQueType(5);
+                paperQue.setAnswerId(fillId);
+                paperQue.setPaperId(paperId);
+                paperQueMapper.insertSelective(paperQue);
+                //更新compose_flag字段
+                bankAnswerQue.setComposeFlag("1");
+                bankAnswerQueMapper.updateByPrimaryKeySelective(bankAnswerQue);
+            }
+        }
         return result;
     }
 

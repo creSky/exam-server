@@ -177,9 +177,10 @@ public class StudentHomeServiceImpl implements StudentHomeService {
 
             map.put("singleId",bankSingleChoiceQue.getSingleId());
 
-            Map<String, String> singleContentMap = FindContentWithImage.findContentWithImage(bankSingleChoiceQue.getSingleContent());
-            map.put("singleContent",singleContentMap.get("content"));
-            map.put("pictureSrc",singleContentMap.get("pictureSrc"));
+            /*Map<String, String> singleContentMap =
+                    FindContentWithImage.findContentWithImage(bankSingleChoiceQue.getSingleContent());*/
+            map.put("singleContent",bankSingleChoiceQue.getSingleContent());
+            map.put("pictureSrc",bankSingleChoiceQue.getPictureSrc());
 
             List<Map<String, String>> optionsList = new ArrayList<>();
 
@@ -240,9 +241,11 @@ public class StudentHomeServiceImpl implements StudentHomeService {
 
             map.put("multipleId",bankMultipleChoiceQue.getMultipleId());
 
+/*
             Map<String, String> multipleContentMap = FindContentWithImage.findContentWithImage(bankMultipleChoiceQue.getMultipleContent());
-            map.put("multipleContent",multipleContentMap.get("content"));
-            map.put("pictureSrc",multipleContentMap.get("pictureSrc"));
+*/
+            map.put("multipleContent",bankMultipleChoiceQue.getMultipleContent());
+            map.put("pictureSrc",bankMultipleChoiceQue.getPictureSrc());
 
             List<Map<String, String>> optionsList = new ArrayList<>();
 
@@ -303,6 +306,8 @@ public class StudentHomeServiceImpl implements StudentHomeService {
 
             map.put("judgeContent",bankJudgeQue.getJudgeContent());
 
+            map.put("pictureSrc",bankJudgeQue.getPictureSrc());
+
             List<Map<String, String>> optionsList = new ArrayList<>();
 
             Map<String, String> optionT = new HashMap<>();
@@ -338,6 +343,8 @@ public class StudentHomeServiceImpl implements StudentHomeService {
 
             map.put("fillContent",bankFillQue.getFillContent());
 
+
+            map.put("pictureSrc",bankFillQue.getPictureSrc());
             listResult.add(map);
         }
 
@@ -363,6 +370,8 @@ public class StudentHomeServiceImpl implements StudentHomeService {
             map.put("fillAnswer",bankFillQue.get("fill_answer"));
 
             map.put("stuAnswer",bankFillQue.get("stu_answer"));
+
+            map.put("pictureSrc",bankFillQue.get("picture_src"));
 
             listResult.add(map);
         }
@@ -597,7 +606,10 @@ public class StudentHomeServiceImpl implements StudentHomeService {
         List<PaperQue> paperQueList=
                 paperQueMapper.selectByExample(paperQueFillExample);
         for(int i = 0; i < paperQueList.size(); i++){
-            String temp = null==fillScore.get(i)?"0":fillScore.get(i);
+            String temp =fillScore.get(i);
+            if(null==fillScore.get(i)||"".equals(fillScore.get(i).trim())){
+                temp="0";
+            }
             Integer si=new Integer(temp);
             score+=si;
             StudentPaperAnswerExample example = new StudentPaperAnswerExample();
@@ -622,7 +634,10 @@ public class StudentHomeServiceImpl implements StudentHomeService {
                 paperQueMapper.selectByExample(paperQueAnswerExample);
 
         for(int i = 0; i < paperQueAnswerList.size(); i++){
-            String temp = answerScore.get(i);
+            String temp =answerScore.get(i);
+            if(null==answerScore.get(i)||"".equals(answerScore.get(i).trim())){
+                temp="0";
+            }
             Integer si=new Integer(temp);
             score+=si;
             StudentPaperAnswerExample example = new StudentPaperAnswerExample();

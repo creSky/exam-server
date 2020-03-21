@@ -19,6 +19,16 @@ public class StudentPaperScore {
 
     private String tno;
 
+    private String docPath;
+
+    public String getDocPath() {
+        return docPath;
+    }
+
+    public void setDocPath(String docPath) {
+        this.docPath = docPath;
+    }
+
     public String getTno() {
         return tno;
     }

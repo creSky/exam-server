@@ -41,7 +41,7 @@ public class ProfileImageSavaUtil {
             // 若头像名称不存在
             if (profilePathAndNameDB == null || "".equals(profilePathAndNameDB)) {
                 String name = System.currentTimeMillis() + newProfile.getOriginalFilename();
-                newImgSrc = "http:\\\\localhost:8080\\api\\profiles\\" + name;
+                newImgSrc = "http:\\\\localhost:8016\\api\\profiles\\" + name;
                 newDistName = profilesPath+ name;
             }
             // 磁盘保存

@@ -1,11 +1,11 @@
 package com.mwt.oes.controller;
 
+import com.mwt.oes.properties.Global;
 import com.mwt.oes.service.TeacherBankManageService;
 import com.mwt.oes.service.TeacherPaperService;
 import com.mwt.oes.util.FileUtil;
 import com.mwt.oes.util.QiniuCloudUtil;
 import com.mwt.oes.util.ServerResponse;
-import com.riozenc.titanTool.properties.Global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,8 +67,7 @@ public class TeacherBankManageController {
         } catch (Exception e) {
             return ServerResponse.createByError("文件上传发生异常！");
         }
-        return ServerResponse.createBySuccess("文件上传成功",
-                Global.getConfig("ip")+filePath);
+        return ServerResponse.createBySuccess("文件上传成功",filePath);
     }
 
     // 添加单选题题目
