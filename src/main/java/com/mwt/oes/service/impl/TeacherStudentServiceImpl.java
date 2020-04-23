@@ -116,6 +116,8 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
     public List<Map<String, Object>> getPapersList() {
         List<Map<String, Object>> resultList = new ArrayList<>();
         PaperExample paperExample = new PaperExample();
+        PaperExample.Criteria criteria=paperExample.createCriteria();
+        criteria.andVisibleEqualTo(1);
         paperExample.setOrderByClause("paper_id asc");
         List<Paper> paperList = paperMapper.selectByExample(paperExample);
         for (Paper paper : paperList) {
@@ -150,9 +152,10 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
     }
 
     @Override
-    public List<Map<String, Object>> searchScoresList(String sno, Integer paperId) {
+    public List<Map<String, Object>> searchScoresList(Integer paperId,
+                                                      String stuName) {
         List<Map<String, Object>> resultList = new ArrayList<>();
-        StudentPaperScoreExample studentPaperScoreExample = new StudentPaperScoreExample();
+        /*StudentPaperScoreExample studentPaperScoreExample = new StudentPaperScoreExample();
         StudentPaperScoreExample.Criteria criteria = studentPaperScoreExample.createCriteria();
         if (!sno.equals("undefined")){
             criteria.andSnoLike("%" + sno + "%");
@@ -160,8 +163,11 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
         if (paperId != 0){
             criteria.andPaperIdEqualTo(paperId);
         }
-        studentPaperScoreExample.setOrderByClause("sno asc");
-        List<StudentPaperScore> studentPaperScoreList = studentPaperScoreMapper.selectByExample(studentPaperScoreExample);
+        studentPaperScoreExample.setOrderByClause("sno asc");*/
+        Map<String,Object> map=new HashMap<>();
+        map.put("stuName",("undefined").equals(stuName)?null:stuName);
+        map.put("paperId",paperId==null||0==paperId?null:paperId);
+        List<StudentPaperScore> studentPaperScoreList = studentPaperScoreMapper.searchScoresList(map);
         for (StudentPaperScore studentPaperScore : studentPaperScoreList){
             Map<String, Object> mapSearch = new HashMap<>();
             Student student = studentMapper.selectByPrimaryKey(studentPaperScore.getSno());
@@ -339,6 +345,11 @@ public class TeacherStudentServiceImpl  implements TeacherStudentService {
     @Override
     public List<StudentAnswerEntity> answerExportDoc(Map record){
         return teacherMapper.answerExportDoc(record);
+    }
+    @Override
+    public List<StudentPaperScore> searchScoresList(Map record){
+        return studentPaperScoreMapper.searchScoresList(record);
+
     }
 
 }

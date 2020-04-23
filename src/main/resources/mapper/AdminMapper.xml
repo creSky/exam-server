@@ -8,6 +8,7 @@
     <result column="adm_sex" property="admSex" jdbcType="VARCHAR" />
     <result column="adm_email" property="admEmail" jdbcType="VARCHAR" />
     <result column="adm_phone" property="admPhone" jdbcType="CHAR" />
+    <result column="lang_id" property="langId" jdbcType="INTEGER" />
     <result column="adm_last_login_time" property="admLastLoginTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -69,7 +70,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    ano, adm_psw, adm_name, adm_sex, adm_email, adm_phone, adm_last_login_time
+    ano, adm_psw, adm_name, adm_sex, adm_email, adm_phone,lang_id,
+    adm_last_login_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mwt.oes.domain.AdminExample" >
     select
@@ -103,11 +105,11 @@
   </delete>
   <insert id="insert" parameterType="com.mwt.oes.domain.Admin" >
     insert into admin (ano, adm_psw, adm_name, 
-      adm_sex, adm_email, adm_phone, 
+      adm_sex, adm_email, adm_phone, lang_id
       adm_last_login_time)
     values (#{ano,jdbcType=CHAR}, #{admPsw,jdbcType=VARCHAR}, #{admName,jdbcType=VARCHAR}, 
       #{admSex,jdbcType=VARCHAR}, #{admEmail,jdbcType=VARCHAR}, #{admPhone,jdbcType=CHAR}, 
-      #{admLastLoginTime,jdbcType=TIMESTAMP})
+      #{langId,jdbcType=INTEGER},#{admLastLoginTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.mwt.oes.domain.Admin" >
     insert into admin
@@ -129,6 +131,9 @@
       </if>
       <if test="admPhone != null" >
         adm_phone,
+      </if>
+      <if test="langId != null" >
+        lang_id,
       </if>
       <if test="admLastLoginTime != null" >
         adm_last_login_time,
@@ -152,6 +157,9 @@
       </if>
       <if test="admPhone != null" >
         #{admPhone,jdbcType=CHAR},
+      </if>
+      <if test="langId != null" >
+        #{langId,jdbcType=INTEGER},
       </if>
       <if test="admLastLoginTime != null" >
         #{admLastLoginTime,jdbcType=TIMESTAMP},
@@ -185,6 +193,9 @@
       <if test="record.admPhone != null" >
         adm_phone = #{record.admPhone,jdbcType=CHAR},
       </if>
+      <if test="record.langId != null" >
+        lang_id = #{record.langId,jdbcType=INTEGER},
+      </if>
       <if test="record.admLastLoginTime != null" >
         adm_last_login_time = #{record.admLastLoginTime,jdbcType=TIMESTAMP},
       </if>
@@ -201,6 +212,7 @@
       adm_sex = #{record.admSex,jdbcType=VARCHAR},
       adm_email = #{record.admEmail,jdbcType=VARCHAR},
       adm_phone = #{record.admPhone,jdbcType=CHAR},
+    lang_id = #{record.langId,jdbcType=INTEGER},
       adm_last_login_time = #{record.admLastLoginTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -224,6 +236,9 @@
       <if test="admPhone != null" >
         adm_phone = #{admPhone,jdbcType=CHAR},
       </if>
+      <if test="langId != null" >
+        lang_id = #{langId,jdbcType=INTEGER},
+      </if>
       <if test="admLastLoginTime != null" >
         adm_last_login_time = #{admLastLoginTime,jdbcType=TIMESTAMP},
       </if>
@@ -237,6 +252,7 @@
       adm_sex = #{admSex,jdbcType=VARCHAR},
       adm_email = #{admEmail,jdbcType=VARCHAR},
       adm_phone = #{admPhone,jdbcType=CHAR},
+      lang_id = #{langId,jdbcType=INTEGER},
       adm_last_login_time = #{admLastLoginTime,jdbcType=TIMESTAMP}
     where ano = #{ano,jdbcType=CHAR}
   </update>

@@ -28,9 +28,14 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     @Autowired
     BankAnswerQueMapper bankAnswerQueMapper;
     @Override
-    public List<Map<String, Object>> getSingleList() {
+    public List<Map<String, Object>> getSingleList( Integer langId) {
         List<Map<String, Object>> resultList = new ArrayList<>();
         BankSingleChoiceQueExample bankSingleChoiceQueExample = new BankSingleChoiceQueExample();
+        if(0!=langId){
+            BankSingleChoiceQueExample.Criteria criteria=
+                    bankSingleChoiceQueExample.createCriteria();
+            criteria.andLangIdEqualTo(langId);
+        }
         bankSingleChoiceQueExample.setOrderByClause("single_id asc");
         List<BankSingleChoiceQue> bankSingleChoiceQueList = bankSingleChoiceQueMapper.selectByExample(bankSingleChoiceQueExample);
         for (BankSingleChoiceQue bankSingleChoiceQue : bankSingleChoiceQueList) {
@@ -52,9 +57,9 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("singleAnswer", bankSingleChoiceQue.getSingleAnswer());
             map.put("composeFlag", bankSingleChoiceQue.getComposeFlag());
             map.put("answerExplain", bankSingleChoiceQue.getAnswerExplain());
-            int langId = bankSingleChoiceQue.getLangId();
-            map.put("langId", langId);
-            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(langId);
+            int allLangId = bankSingleChoiceQue.getLangId();
+            map.put("langId", allLangId);
+            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(allLangId);
             map.put("langName", programingLanguage.getLangName());
             map.put("langImgSrc", programingLanguage.getLangImgSrc());
             resultList.add(map);
@@ -63,7 +68,10 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     }
 
     @Override
-    public List<Map<String, Object>> searchSingleList(String content, Integer langId, String composeFlag) {
+    public List<Map<String, Object>> searchSingleList(String content,
+                                                      Integer langId,
+                                                      String composeFlag) {
+
         List<Map<String, Object>> resultList = new ArrayList<>();
         BankSingleChoiceQueExample bankSingleChoiceQueExample = new BankSingleChoiceQueExample();
         BankSingleChoiceQueExample.Criteria criteria = bankSingleChoiceQueExample.createCriteria();
@@ -212,9 +220,14 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
 
     // --------------------------------------------------------------------------------------多选题
     @Override
-    public List<Map<String, Object>> getMultipleList() {
+    public List<Map<String, Object>> getMultipleList(Integer langId) {
         List<Map<String, Object>> resultList = new ArrayList<>();
         BankMultipleChoiceQueExample bankMultipleChoiceQueExample = new BankMultipleChoiceQueExample();
+        if(0!=langId){
+            BankMultipleChoiceQueExample.Criteria criteria=
+                    bankMultipleChoiceQueExample.createCriteria();
+            criteria.andLangIdEqualTo(langId);
+        }
         bankMultipleChoiceQueExample.setOrderByClause("multiple_id asc");
         List<BankMultipleChoiceQue> bankMultipleChoiceQueList = bankMultipleChoiceQueMapper.selectByExample(bankMultipleChoiceQueExample);
         for (BankMultipleChoiceQue bankMultipleChoiceQue : bankMultipleChoiceQueList) {
@@ -235,9 +248,9 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("multipleAnswer", answerArr);
             map.put("composeFlag", bankMultipleChoiceQue.getComposeFlag());
             map.put("answerExplain", bankMultipleChoiceQue.getAnswerExplain());
-            int langId = bankMultipleChoiceQue.getLangId();
-            map.put("langId", langId);
-            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(langId);
+            int allLangId = bankMultipleChoiceQue.getLangId();
+            map.put("langId", allLangId);
+            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(allLangId);
             map.put("langName", programingLanguage.getLangName());
             map.put("langImgSrc", programingLanguage.getLangImgSrc());
             resultList.add(map);
@@ -399,9 +412,14 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     // --------------------------------------------------------------------------------------判断题
 
     @Override
-    public List<Map<String, Object>> getJudgeList() {
+    public List<Map<String, Object>> getJudgeList(Integer langId) {
         List<Map<String, Object>> resultList = new ArrayList<>();
         BankJudgeQueExample bankJudgeQueExample = new BankJudgeQueExample();
+        if(0!=langId){
+            BankJudgeQueExample.Criteria criteria=
+                    bankJudgeQueExample.createCriteria();
+            criteria.andLangIdEqualTo(langId);
+        }
         bankJudgeQueExample.setOrderByClause("judge_id asc");
         List<BankJudgeQue> bankJudgeQueList = bankJudgeQueMapper.selectByExample(bankJudgeQueExample);
         for (BankJudgeQue bankJudgeQue : bankJudgeQueList) {
@@ -413,9 +431,9 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("judgeAnswer", bankJudgeQue.getJudgeAnswer());
             map.put("composeFlag", bankJudgeQue.getComposeFlag());
             map.put("answerExplain", bankJudgeQue.getAnswerExplain());
-            int langId = bankJudgeQue.getLangId();
-            map.put("langId", langId);
-            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(langId);
+            int allLangId = bankJudgeQue.getLangId();
+            map.put("langId", allLangId);
+            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(allLangId);
             map.put("langName", programingLanguage.getLangName());
             map.put("langImgSrc", programingLanguage.getLangImgSrc());
             resultList.add(map);
@@ -522,9 +540,14 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     // --------------------------------------------------------------------------------------填空题
 
     @Override
-    public List<Map<String, Object>> getFillList() {
+    public List<Map<String, Object>> getFillList(Integer langId) {
         List<Map<String, Object>> resultList = new ArrayList<>();
         BankFillQueExample bankFillQueExample = new BankFillQueExample();
+        if(0!=langId){
+            BankFillQueExample.Criteria criteria=
+                    bankFillQueExample.createCriteria();
+            criteria.andLangIdEqualTo(langId);
+        }
         bankFillQueExample.setOrderByClause("fill_id asc");
         List<BankFillQue> bankFillQueList = bankFillQueMapper.selectByExample(bankFillQueExample);
         for (BankFillQue bankFillQue : bankFillQueList) {
@@ -536,9 +559,9 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("pictureSrc", bankFillQue.getPictureSrc());
             map.put("fillAnswer", bankFillQue.getFillAnswer());
             map.put("answerExplain", bankFillQue.getAnswerExplain());
-            int langId = bankFillQue.getLangId();
-            map.put("langId", langId);
-            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(langId);
+            int allLangId = bankFillQue.getLangId();
+            map.put("langId", allLangId);
+            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(allLangId);
             map.put("langName", programingLanguage.getLangName());
             map.put("langImgSrc", programingLanguage.getLangImgSrc());
             resultList.add(map);
@@ -646,9 +669,14 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
     //简答题
 
     @Override
-    public List<Map<String, Object>> getAnswerList() {
+    public List<Map<String, Object>> getAnswerList(Integer langId) {
         List<Map<String, Object>> resultList = new ArrayList<>();
         BankAnswerQueExample bankAnswerQueExample = new BankAnswerQueExample();
+        if(0!=langId){
+            BankAnswerQueExample.Criteria criteria=
+                    bankAnswerQueExample.createCriteria();
+            criteria.andLangIdEqualTo(langId);
+        }
         bankAnswerQueExample.setOrderByClause("fill_id asc");
         List<BankAnswerQue> bankAnswerQueList = bankAnswerQueMapper.selectByExample(bankAnswerQueExample);
         for (BankAnswerQue bankAnswerQue : bankAnswerQueList) {
@@ -660,9 +688,9 @@ public class TeacherBankManageServiceImpl implements TeacherBankManageService {
             map.put("fillAnswer", bankAnswerQue.getFillAnswer());
             map.put("pictureSrc", bankAnswerQue.getPictureSrc());
             map.put("answerExplain", bankAnswerQue.getAnswerExplain());
-            int langId = bankAnswerQue.getLangId();
-            map.put("langId", langId);
-            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(langId);
+            int allLangId = bankAnswerQue.getLangId();
+            map.put("langId", allLangId);
+            ProgramingLanguage programingLanguage = programingLanguageMapper.selectByPrimaryKey(allLangId);
             map.put("langName", programingLanguage.getLangName());
             map.put("langImgSrc", programingLanguage.getLangImgSrc());
             resultList.add(map);

@@ -384,6 +384,77 @@ public class AdminExample {
             addCriterion("adm_sex not between", value1, value2, "admSex");
             return (Criteria) this;
         }
+        //
+
+        public Criteria andLangIdIsNull() {
+            addCriterion("lang_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdIsNotNull() {
+            addCriterion("lang_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdEqualTo(String value) {
+            addCriterion("lang_id =", value, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdNotEqualTo(String value) {
+            addCriterion("lang_id <>", value, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdGreaterThan(String value) {
+            addCriterion("lang_id >", value, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdGreaterThanOrEqualTo(String value) {
+            addCriterion("lang_id >=", value, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdLessThan(String value) {
+            addCriterion("lang_id <", value, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdLessThanOrEqualTo(String value) {
+            addCriterion("lang_id <=", value, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdLike(String value) {
+            addCriterion("lang_id like", value, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdNotLike(String value) {
+            addCriterion("lang_id not like", value, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdIn(List<String> values) {
+            addCriterion("lang_id in", values, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdNotIn(List<String> values) {
+            addCriterion("lang_id not in", values, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdBetween(String value1, String value2) {
+            addCriterion("lang_id between", value1, value2, "langId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLangIdNotBetween(String value1, String value2) {
+            addCriterion("lang_id not between", value1, value2, "langId");
+            return (Criteria) this;
+        }
 
         public Criteria andAdmEmailIsNull() {
             addCriterion("adm_email is null");

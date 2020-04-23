@@ -152,7 +152,7 @@ public class TeacherStudentController {
         List<String> single = new ArrayList<>();
         Map<String, String> singleParam = new HashMap<>();
         singleParam.put("sno", sno);
-        singleParam.put("paperId", "14");
+        singleParam.put("paperId", paperId.toString());
         //单选题
         List<StudentSingleEntity> studentSingleEntities =
                 teacherStudentService.singleExportDoc(singleParam);
@@ -185,8 +185,12 @@ public class TeacherStudentController {
                     rownum = rownum + 1;
                 }
                 //替换换行和null
-                data.add(singStringBuilder.toString()
-                        .replaceAll("null", ""));
+                data.add(java.util.regex.Matcher.quoteReplacement(singStringBuilder.toString())
+                        .replaceAll("null", "")
+                        .replaceAll("$", "\\$")
+                        .replaceAll("&","&amp;")
+                        .replaceAll("\"","&quot;")
+                        .replaceAll("'","&apos;"));
             } else {
                 data.add("");
             }
@@ -220,8 +224,12 @@ public class TeacherStudentController {
                     rownum = rownum + 1;
                 }
                 //替换换行和null
-                data.add(multiStringBuilder.toString()
+                data.add(java.util.regex.Matcher.quoteReplacement(multiStringBuilder.toString())
                         .replaceAll("null", "")
+                        .replaceAll("$", "\\$")
+                        .replaceAll("&","&amp;")
+                        .replaceAll("\"","&quot;")
+                        .replaceAll("'","&apos;")
                 );
             } else {
                 data.add("");
@@ -246,8 +254,12 @@ public class TeacherStudentController {
                     rownum = rownum + 1;
                 }
                 //替换换行和null
-                data.add(judgeStringBuilder.toString()
+                data.add(java.util.regex.Matcher.quoteReplacement(judgeStringBuilder.toString())
                         .replaceAll("null", "")
+                        .replaceAll("$", "\\$")
+                        .replaceAll("&","&amp;")
+                        .replaceAll("\"","&quot;")
+                        .replaceAll("'","&apos;")
                 );
             } else {
                 data.add("");
@@ -272,8 +284,11 @@ public class TeacherStudentController {
                     rownum = rownum + 1;
                 }
                 //替换换行和null
-                data.add(fillStringBuilder.toString()
-                        .replaceAll("null", ""));
+                data.add(java.util.regex.Matcher.quoteReplacement(fillStringBuilder.toString())
+                        .replaceAll("null", "")
+                        .replaceAll("&","&amp;")
+                        .replaceAll("\"","&quot;")
+                        .replaceAll("'","&apos;"));
             } else {
                 data.add("");
             }
@@ -296,8 +311,11 @@ public class TeacherStudentController {
                     rownum = rownum + 1;
                 }
                 //替换换行和null
-                data.add(answerStringBuilder.toString()
-                        .replaceAll("null", ""));
+                data.add(java.util.regex.Matcher.quoteReplacement(answerStringBuilder.toString())
+                        .replaceAll("null", "")
+                        .replaceAll("&","&amp;")
+                        .replaceAll("\"","&quot;")
+                        .replaceAll("'","&apos;"));
             } else {
                 data.add("");
             }
@@ -331,9 +349,10 @@ public class TeacherStudentController {
 
     //    获取搜索成绩列表信息
     @RequestMapping("/searchScoresList")
-    public ServerResponse searchScoresList(@RequestParam("sno") String sno,
-                                           @RequestParam("paperId") Integer paperId) {
-        List<Map<String, Object>> resultList = teacherStudentService.searchScoresList(sno, paperId);
+    public ServerResponse searchScoresList(@RequestParam("paperId") Integer paperId,
+                                           @RequestParam("stuName") String stuName) {
+        List<Map<String, Object>> resultList =
+                teacherStudentService.searchScoresList(paperId,stuName);
         return ServerResponse.createBySuccess("获取搜索成绩信息成功", resultList);
     }
 

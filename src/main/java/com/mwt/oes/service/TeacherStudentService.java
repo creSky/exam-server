@@ -13,7 +13,8 @@ public interface TeacherStudentService {
     public List<Map<String, Object>> getScoresList();
     public List<Map<String, Object>> getPapersList();
     public int deleteScore(String sno, Integer paperId);
-    public List<Map<String, Object>> searchScoresList(String sno, Integer paperId);
+    public List<Map<String, Object>> searchScoresList(Integer paperId,
+                                                      String stuName);
     public Map<String, Object> getChartData(Integer paperId);
     public Map<String, Object> insertStudentInfoList(List<Map<String, Object>> studentList);
     public List<StudentSingleEntity> singleExportDoc(Map record);
@@ -21,4 +22,5 @@ public interface TeacherStudentService {
     public List<StudentJudgeEntity> judgeExportDoc(Map record);
     public List<StudentFillEntity> fillExportDoc(Map record);
     public List<StudentAnswerEntity> answerExportDoc(Map record);
+    public List<StudentPaperScore> searchScoresList(Map record);
 }

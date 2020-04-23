@@ -28,9 +28,9 @@ public class TeacherBankManageController {
 
     //    获取全部单选题信息
     @RequestMapping("/getSingleList")
-    public ServerResponse getSingleList() {
+    public ServerResponse getSingleList(@RequestParam("langId") Integer langId) {
         Map<String, Object> map = new HashMap<>();
-        List<Map<String, Object>> singleList = teacherBankManageService.getSingleList();
+        List<Map<String, Object>> singleList = teacherBankManageService.getSingleList(langId);
         map.put("singleList", singleList);
         List<Map<String, Object>> langOptions = teacherPaperService.getLangOptions();
         map.put("langOptions", langOptions);
@@ -42,7 +42,8 @@ public class TeacherBankManageController {
     public ServerResponse searchSingleList(@RequestParam("content") String content,
                                            @RequestParam("langId") Integer langId,
                                            @RequestParam("composeFlag") String composeFlag) {
-        List<Map<String, Object>> resultList = teacherBankManageService.searchSingleList(content, langId, composeFlag);
+        List<Map<String, Object>> resultList =
+                teacherBankManageService.searchSingleList(content, langId, composeFlag);
         return ServerResponse.createBySuccess("获取搜索单选题信息成功", resultList);
     }
 
@@ -106,9 +107,9 @@ public class TeacherBankManageController {
     // ----------------------------------------------------------------------------------
     //    获取全部多选题信息
     @RequestMapping("/getMultipleList")
-    public ServerResponse getMultipleList() {
+    public ServerResponse getMultipleList(@RequestParam("langId") Integer langId) {
         Map<String, Object> map = new HashMap<>();
-        List<Map<String, Object>> multipleList = teacherBankManageService.getMultipleList();
+        List<Map<String, Object>> multipleList = teacherBankManageService.getMultipleList(langId);
         map.put("multipleList", multipleList);
         List<Map<String, Object>> langOptions = teacherPaperService.getLangOptions();
         map.put("langOptions", langOptions);
@@ -183,9 +184,9 @@ public class TeacherBankManageController {
     // ----------------------------------------------------------------------------------
     //    获取全部判断题信息
     @RequestMapping("/getJudgeList")
-    public ServerResponse getJudgeList() {
+    public ServerResponse getJudgeList(@RequestParam("langId") Integer langId) {
         Map<String, Object> map = new HashMap<>();
-        List<Map<String, Object>> judgeList = teacherBankManageService.getJudgeList();
+        List<Map<String, Object>> judgeList = teacherBankManageService.getJudgeList(langId);
         map.put("judgeList", judgeList);
         List<Map<String, Object>> langOptions = teacherPaperService.getLangOptions();
         map.put("langOptions", langOptions);
@@ -251,9 +252,9 @@ public class TeacherBankManageController {
     // ----------------------------------------------------------------------------------
     //    获取全部填空题信息
     @RequestMapping("/getFillList")
-    public ServerResponse getFillList() {
+    public ServerResponse getFillList(@RequestParam("langId") Integer langId) {
         Map<String, Object> map = new HashMap<>();
-        List<Map<String, Object>> fillList = teacherBankManageService.getFillList();
+        List<Map<String, Object>> fillList = teacherBankManageService.getFillList(langId);
         map.put("fillList", fillList);
         List<Map<String, Object>> langOptions = teacherPaperService.getLangOptions();
         map.put("langOptions", langOptions);
@@ -320,9 +321,9 @@ public class TeacherBankManageController {
     // ----------------------------------------------------------------------------------
     //    获取全部填空题信息
     @RequestMapping("/getAnswerList")
-    public ServerResponse getAnswerList() {
+    public ServerResponse getAnswerList(@RequestParam("langId") Integer langId) {
         Map<String, Object> map = new HashMap<>();
-        List<Map<String, Object>> fillList = teacherBankManageService.getAnswerList();
+        List<Map<String, Object>> fillList = teacherBankManageService.getAnswerList(langId);
         map.put("fillList", fillList);
         List<Map<String, Object>> langOptions = teacherPaperService.getLangOptions();
         map.put("langOptions", langOptions);

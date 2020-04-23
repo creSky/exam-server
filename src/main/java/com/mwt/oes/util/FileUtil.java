@@ -188,7 +188,7 @@ public class FileUtil {
                  *
                  * 正则替换文件中的占位符
                  */
-                result = result.replaceAll(items.get(i), data.get(i));
+                result = result.replaceAll(items.get(i),java.util.regex.Matcher.quoteReplacement( data.get(i)));
             }
             tofilepath = tofilepath;
 

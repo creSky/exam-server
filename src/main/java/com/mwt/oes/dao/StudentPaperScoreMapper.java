@@ -3,6 +3,8 @@ package com.mwt.oes.dao;
 import com.mwt.oes.domain.StudentPaperScore;
 import com.mwt.oes.domain.StudentPaperScoreExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface StudentPaperScoreMapper {
@@ -27,4 +29,6 @@ public interface StudentPaperScoreMapper {
     int updateByPrimaryKeySelective(StudentPaperScore record);
 
     int updateByPrimaryKey(StudentPaperScore record);
+
+    List<StudentPaperScore> searchScoresList(Map record);
 }

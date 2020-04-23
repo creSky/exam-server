@@ -17,6 +17,16 @@ public class Admin {
 
     private Date admLastLoginTime;
 
+    private Integer langId;
+
+    public Integer getLangId() {
+        return langId;
+    }
+
+    public void setLangId(Integer langId) {
+        this.langId = langId;
+    }
+
     public String getAno() {
         return ano;
     }
