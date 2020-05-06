@@ -319,7 +319,7 @@
 
 
     <select id="judgeExportDoc" parameterType="java.util.Map"
-            resultType="com.mwt.oes.domain.StudentMultiEntity">
+            resultType="com.mwt.oes.domain.StudentJudgeEntity">
          SELECT
         b.judge_content judgeContent,
         s.stu_answer stuAnswer,
